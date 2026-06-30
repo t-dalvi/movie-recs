@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stream Finder — movie recommendations for your services</title>
+<style>
+  :root {
+    --bg: #000000;
+    --surface: #141414;
+    --surface-2: #1f1f1f;
+    --border: #2a2a2a;
+    --border-strong: #404040;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --text-muted: #737373;
+    --accent: #e50914;
+    --accent-hover: #f40612;
+    --accent-bg: rgba(229, 9, 20, 0.15);
+    --accent-text: #ff4d57;
+    --gold: #d4a843;
+    --green: #46d369;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+  header { margin-bottom: 1.75rem; }
+  h1 {
+    font-size: 34px;
+    font-weight: 800;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  header p { color: var(--text-secondary); font-size: 15px; margin: 0; max-width: 560px; }
+
+  .mode-toggle {
+    display: inline-flex;
+    background: var(--surface);
+    border-radius: 4px;
+    padding: 3px;
+    margin-bottom: 1.75rem;
+  }
+  .mode-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 8px 18px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .mode-btn.active { background: var(--accent); color: white; }
+  .mode-btn:not(.active):hover { color: var(--text-primary); }
+
+  .mood-filters.hidden, .taste-section.hidden { display: none; }
+
+  .setup-banner {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    padding: 14px 18px;
+    margin-bottom: 2rem;
+    font-size: 13px;
+    color: var(--text-secondary);
+    display: none;
+  }
+  .setup-banner.show { display: block; }
+  .setup-banner strong { color: var(--text-primary); }
+  .setup-banner code {
+    background: var(--surface-2);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: var(--accent-text);
+  }
+
+  section { margin-bottom: 1.75rem; }
+  .label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  .service-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .service-chip:hover { border-color: var(--border-strong); background: var(--surface-2); }
+  .service-chip.selected { border-color: var(--accent); background: var(--accent-bg); }
+  .service-chip.selected .chip-name { color: var(--text-primary); }
+  .service-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .chip-name { font-size: 13px; font-weight: 600; }
+
+  .controls-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+  }
+  .field label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  select, input[type=text], textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 4px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  select:focus, input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .taste-box {
+    background: var(--surface);
+    border-radius: 4px;
+    padding: 16px 18px;
+  }
+  .taste-box .label { margin-bottom: 6px; }
+  .taste-box .hint { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  textarea { min-height: 90px; resize: vertical; font-family: ui-monospace, monospace; font-size: 12px; }
+  .taste-status { font-size: 12px; color: var(--green); margin-top: 8px; display: none; }
+  .taste-status.show { display: block; }
+
+  .generate-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-radius: 4px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    margin-top: 0.5rem;
+  }
+  .generate-btn:hover:not(:disabled) { background: var(--accent-hover); }
+  .generate-btn:active:not(:disabled) { transform: scale(0.99); }
+  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .scores { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+  .score {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 3px;
+  }
+  .score-rt-fresh { background: rgba(229, 9, 20, 0.18); color: var(--accent-text); }
+  .score-rt-rotten { background: rgba(120, 120, 120, 0.2); color: var(--text-secondary); }
+  .score-imdb { background: rgba(212, 168, 67, 0.15); color: var(--gold); }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .badge {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 3px 9px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .badge-service { background: var(--accent); color: white; }
+  .badge-genre { background: var(--surface-2); color: var(--text-secondary); border: 1px solid var(--border); }
+  .badge-boost { background: rgba(70, 211, 105, 0.15); color: var(--green); }
+  .movie-desc { font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
+
+  .row-section { margin-bottom: 2.25rem; }
+  .row-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    color: var(--text-primary);
+  }
+  .row-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 8px;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  .row-scroll::-webkit-scrollbar { height: 6px; }
+  .row-scroll::-webkit-scrollbar-track { background: transparent; }
+  .row-scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+  .poster-card {
+    flex: 0 0 160px;
+    width: 160px;
+    cursor: pointer;
+    position: relative;
+  }
+  .poster-card .poster-img {
+    width: 100%;
+    height: 240px;
+    border-radius: 4px;
+    object-fit: cover;
+    background: var(--surface);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: block;
+  }
+  .poster-card:hover .poster-img {
+    transform: scale(1.06);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    z-index: 2;
+    position: relative;
+  }
+  .poster-card .poster-fallback {
+    width: 100%;
+    height: 240px;
+    border-radius: 4px;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  .poster-card .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 8px;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .poster-card .card-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .poster-card .card-rt { color: var(--accent-text); font-weight: 700; }
+
+  .row-empty {
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: 12px 0;
+  }
+
+  /* Expanded detail panel for a selected movie */
+  .detail-panel {
+    background: var(--surface);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 2rem;
+    display: none;
+    gap: 20px;
+  }
+  .detail-panel.show { display: flex; }
+  .detail-panel .poster {
+    width: 140px;
+    height: 210px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--surface-2);
+  }
+  .detail-body { flex: 1; min-width: 0; }
+  .detail-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .detail-title { font-size: 22px; font-weight: 800; }
+  .detail-meta { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  .detail-close {
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--text-secondary);
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .detail-close:hover { color: var(--text-primary); border-color: var(--text-secondary); }
+  .detail-desc { font-size: 14px; color: var(--text-secondary); margin-top: 10px; line-height: 1.6; }
+
+  .loading-state, .empty-state, .error-msg {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+  .error-msg { color: var(--accent-text); }
+  .spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-strong);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  footer { margin-top: 3rem; text-align: center; font-size: 12px; color: var(--text-muted); }
+  footer a { color: var(--accent-text); }
+
+  @media (max-width: 480px) {
+    .poster-card { flex: 0 0 120px; width: 120px; }
+    .poster-card .poster-img, .poster-card .poster-fallback { height: 180px; }
+    .detail-panel { flex-direction: column; }
+    .detail-panel .poster { width: 100%; height: 220px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Stream Finder</h1>
+    <p>Pick your streaming services, set your mood, and find something good to watch — filtered to what you can actually stream.</p>
+  </header>
+
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="defaultModeBtn" onclick="setMode('default')">Default</button>
+    <button class="mode-btn" id="personalModeBtn" onclick="setMode('personal')">Tejas's Taste</button>
+  </div>
+
+  <div class="setup-banner" id="setupBanner">
+    <strong>One-time setup:</strong> open this file in a text editor and replace
+    <code>YOUR_TMDB_API_KEY</code> and <code>YOUR_OMDB_API_KEY</code> near the top of the
+    <code>&lt;script&gt;</code> section with your own free API keys.
+    Get a TMDB key at <code>themoviedb.org/settings/api</code> (free, instant) and an OMDb key at
+    <code>omdbapi.com/apikey.aspx</code> (free tier, 1000 requests/day).
+  </div>
+
+  <section>
+    <div class="label">Your streaming services</div>
+    <div class="services-grid" id="servicesGrid"></div>
+  </section>
+
+  <section class="mood-filters" id="moodFiltersSection">
+    <div class="controls-row">
+      <div class="field">
+        <label for="moodSelect">Mood (for Top picks row)</label>
+        <select id="moodSelect">
+          <option value="any">Anything good</option>
+          <option value="35">Comedy</option>
+          <option value="53">Thriller</option>
+          <option value="18">Heartwarming drama</option>
+          <option value="9648">Mystery / mind-bending</option>
+          <option value="28">Action</option>
+          <option value="27">Horror / scary</option>
+          <option value="10749">Romance</option>
+          <option value="10751">Family-friendly</option>
+          <option value="99">Documentary</option>
+          <option value="16">Animated</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="eraSelect">Era</label>
+        <select id="eraSelect">
+          <option value="any">Any era</option>
+          <option value="2023-01-01,2030-01-01">Recent (2023+)</option>
+          <option value="2010-01-01,2020-01-01">2010s</option>
+          <option value="2000-01-01,2010-01-01">2000s</option>
+          <option value="1900-01-01,2000-01-01">Classic (pre-2000)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="minRating">Minimum TMDB rating</label>
+        <select id="minRating">
+          <option value="0">Any rating</option>
+          <option value="6">6.0+</option>
+          <option value="7" selected>7.0+</option>
+          <option value="8">8.0+</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="sortBy">Sort by</label>
+        <select id="sortBy">
+          <option value="vote_average.desc">Highest rated</option>
+          <option value="popularity.desc">Most popular</option>
+          <option value="primary_release_date.desc">Newest</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="taste-section hidden" id="tasteSection">
+    <div class="taste-box">
+      <div class="label">Tejas's Taste-based picks</div>
+      <div class="hint" id="tasteHint">Loading your saved taste profile...</div>
+      <div class="taste-status show" id="tasteStatus"></div>
+    </div>
+  </section>
+
+  <button class="generate-btn" id="generateBtn" onclick="getRecommendations()">Get recommendations</button>
+
+  <div class="detail-panel" id="detailPanel"></div>
+  <div id="resultsArea"></div>
+
+  <footer>
+    Streaming and rating data from
+    <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a> and
+    <a href="https://www.omdbapi.com/" target="_blank" rel="noopener">OMDb</a>.
+    Availability is approximate — always confirm on the service itself.
+  </footer>
+
+</div>
+
+<script>
+/* ====================================================================
+   SETUP: paste your own free API keys below.
+   TMDB:  https://www.themoviedb.org/settings/api  (instant, free)
+   OMDb:  https://www.omdbapi.com/apikey.aspx        (free tier, 1000/day)
+   ==================================================================== */
+const TMDB_API_KEY = 'YOUR_TMDB_API_KEY';
+const OMDB_API_KEY  = 'YOUR_OMDB_API_KEY';
+/* ==================================================================== */
+
+/* ====================================================================
+   PERSONAL MODE DATA — generate this once from your Letterboxd export.
+   Open generate-taste-data.html (included alongside this file), paste
+   your ratings.csv there, and it will output a JSON object to paste
+   below. Leave as null to keep personal mode disabled.
+   ==================================================================== */
+const MY_TASTE_DATA = null;
+/* Example shape once generated:
+const MY_TASTE_DATA = {
+  generatedAt: "2026-06-29",
+  genreWeights: { "18": 6, "53": 4, ... },
+  similarityPool: { "278": { count: 3, movie: { id: 278, title: "...", ... } }, ... },
+  likedMovieIds: [278, 19404, ...]
+};
+*/
+/* ==================================================================== */
+
+const SERVICES = [
+  { id: 'netflix',   name: 'Netflix',      color: '#E50914', tmdbId: 8 },
+  { id: 'prime',     name: 'Prime Video',  color: '#00A8E0', tmdbId: 9 },
+  { id: 'disney',    name: 'Disney+',      color: '#113CCF', tmdbId: 337 },
+  { id: 'max',       name: 'Max',          color: '#5822B4', tmdbId: 1899 },
+  { id: 'hulu',      name: 'Hulu',         color: '#1CE783', tmdbId: 15 },
+  { id: 'apple',     name: 'Apple TV+',    color: '#888888', tmdbId: 350 },
+  { id: 'peacock',   name: 'Peacock',      color: '#FA8E00', tmdbId: 386 },
+  { id: 'paramount', name: 'Paramount+',   color: '#0064FF', tmdbId: 531 },
+];
+
+const GENRE_NAMES = {
+  28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime',
+  99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History',
+  27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance',
+  878: 'Science Fiction', 53: 'Thriller', 10752: 'War', 37: 'Western'
+};
+
+let currentMode = 'default'; // 'default' | 'personal'
+let selected = new Set(['netflix', 'prime']);
+let tasteGenreWeights = {}; // genreId -> weight (fallback/tiebreaker)
+let similarityPool = {}; // movieId -> { count, movie } pooled from recommendations
+let likedMovieIds = new Set(); // don't recommend movies the user already rated
+const omdbCache = {}; // "title|year" -> { rt, imdb }
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('defaultModeBtn').classList.toggle('active', mode === 'default');
+  document.getElementById('personalModeBtn').classList.toggle('active', mode === 'personal');
+  document.getElementById('moodFiltersSection').classList.toggle('hidden', mode === 'personal');
+  document.getElementById('tasteSection').classList.toggle('hidden', mode === 'default');
+
+  if (mode === 'personal') {
+    loadPersonalTasteData();
+  }
+}
+
+function loadPersonalTasteData() {
+  const hintEl = document.getElementById('tasteHint');
+  const statusEl = document.getElementById('tasteStatus');
+
+  if (!MY_TASTE_DATA) {
+    hintEl.innerHTML = `No saved taste profile yet. Generate one with
+      <code>generate-taste-data.html</code> (paste your Letterboxd export there),
+      then paste the resulting JSON into <code>MY_TASTE_DATA</code> near the top of this file's script.`;
+    statusEl.textContent = '';
+    tasteGenreWeights = {};
+    similarityPool = {};
+    likedMovieIds = new Set();
+    return;
+  }
+
+  tasteGenreWeights = MY_TASTE_DATA.genreWeights || {};
+  similarityPool = MY_TASTE_DATA.similarityPool || {};
+  likedMovieIds = new Set(MY_TASTE_DATA.likedMovieIds || []);
+
+  hintEl.textContent = `Taste profile loaded (generated ${MY_TASTE_DATA.generatedAt || 'previously'}).`;
+  statusEl.textContent = `Drawing from ${Object.keys(similarityPool).length} similar movies based on ${likedMovieIds.size} favorites.`;
+}
+
+function checkSetup() {
+  if (TMDB_API_KEY === 'YOUR_TMDB_API_KEY' || OMDB_API_KEY === 'YOUR_OMDB_API_KEY') {
+    document.getElementById('setupBanner').classList.add('show');
+    return false;
+  }
+  return true;
+}
+
+function renderServices() {
+  const grid = document.getElementById('servicesGrid');
+  grid.innerHTML = SERVICES.map(s => `
+    <div class="service-chip ${selected.has(s.id) ? 'selected' : ''}" onclick="toggleService('${s.id}')">
+      <div class="service-dot" style="background:${s.color}"></div>
+      <span class="chip-name">${s.name}</span>
+    </div>
+  `).join('');
+}
+
+function toggleService(id) {
+  if (selected.has(id)) selected.delete(id); else selected.add(id);
+  renderServices();
+}
+
+// Genre rows shown in default mode, in addition to the filter-driven "Top picks" row.
+const ROW_GENRES = [
+  { id: 35, label: 'Comedies' },
+  { id: 53, label: 'Thrillers' },
+  { id: 18, label: 'Dramas' },
+  { id: 27, label: 'Horror' },
+  { id: 16, label: 'Animated' },
+  { id: 10751, label: 'Family' },
+];
+
+// --- TMDB discovery (default mode) ---
+function buildDiscoverUrl({ genre, era, minRating, sortBy }) {
+  const selectedServices = SERVICES.filter(s => selected.has(s.id));
+  const providerIds = selectedServices.map(s => s.tmdbId).join('|');
+
+  let url = `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}` +
+    `&include_adult=false&include_video=false&language=en-US&page=1` +
+    `&sort_by=${sortBy}&vote_count.gte=200` +
+    `&with_watch_providers=${providerIds}&watch_region=US&with_watch_monetization_types=flatrate`;
+
+  if (genre && genre !== 'any') url += `&with_genres=${genre}`;
+  if (minRating && minRating !== '0') url += `&vote_average.gte=${minRating}`;
+  if (era && era !== 'any') {
+    const [from, to] = era.split(',');
+    url += `&primary_release_date.gte=${from}&primary_release_date.lte=${to}`;
+  }
+  return url;
+}
+
+async function fetchMoviesFromTMDB(opts) {
+  const url = buildDiscoverUrl(opts);
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`TMDB request failed (${res.status}). Check your API key.`);
+  const data = await res.json();
+  return data.results || [];
+}
+
+async function getWatchProviders(movieId) {
+  const url = `https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${TMDB_API_KEY}`;
+  const res = await fetch(url);
+  if (!res.ok) return [];
+  const data = await res.json();
+  const us = data.results?.US;
+  const flatrate = us?.flatrate || [];
+  const selectedIds = SERVICES.filter(s => selected.has(s.id)).map(s => s.tmdbId);
+  return flatrate.filter(p => selectedIds.includes(p.provider_id)).map(p => p.provider_name);
+}
+
+async function getOMDbScores(title, year) {
+  const key = `${title.toLowerCase()}|${year}`;
+  if (omdbCache[key]) return omdbCache[key];
+  try {
+    const url = `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&t=${encodeURIComponent(title)}&y=${year}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.Response === 'False') {
+      const empty = { rt: null, imdb: null };
+      omdbCache[key] = empty;
+      return empty;
+    }
+    const rt = data.Ratings?.find(r => r.Source === 'Rotten Tomatoes')?.Value || null;
+    const imdb = data.imdbRating && data.imdbRating !== 'N/A' ? data.imdbRating : null;
+    const result = { rt, imdb };
+    omdbCache[key] = result;
+    return result;
+  } catch (e) {
+    return { rt: null, imdb: null };
+  }
+}
+
+// Checks a batch of candidate movies against the user's selected streaming
+// services in parallel, returning only the ones available, capped at `limit`.
+async function filterToStreamable(candidates, limit) {
+  const results = [];
+  for (const c of candidates) {
+    if (results.length >= limit) break;
+    const providers = await getWatchProviders(c.id);
+    if (providers.length > 0) results.push({ ...c, providers });
+  }
+  return results;
+}
+
+// Enriches a list of movies with watch providers (if not already attached)
+// and OMDb scores, in parallel.
+async function enrichMovies(movies) {
+  return Promise.all(movies.map(async (m) => {
+    const year = m.release_date?.slice(0, 4) || '';
+    const needsProviders = !m.providers;
+    const [providers, scores] = await Promise.all([
+      needsProviders ? getWatchProviders(m.id) : Promise.resolve(m.providers),
+      getOMDbScores(m.title, year)
+    ]);
+    const tasteScore = similarityPool[m.id]?.count || 0;
+    return { ...m, providers, scores, year, _tasteScore: tasteScore };
+  }));
+}
+
+let movieIndex = {}; // id -> enriched movie, for detail panel lookups
+
+async function getRecommendations() {
+  if (!checkSetup()) {
+    document.getElementById('resultsArea').innerHTML =
+      '<div class="error-msg">Add your TMDB and OMDb API keys in the script section before running.</div>';
+    return;
+  }
+  if (selected.size === 0) {
+    document.getElementById('resultsArea').innerHTML =
+      '<div class="error-msg">Pick at least one streaming service first.</div>';
+    return;
+  }
+
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = true;
+  closeDetail();
+  movieIndex = {};
+
+  const usePersonal = currentMode === 'personal';
+
+  if (usePersonal && !MY_TASTE_DATA) {
+    document.getElementById('resultsArea').innerHTML =
+      '<div class="empty-state">No taste profile saved yet. Generate one with generate-taste-data.html and add it to MY_TASTE_DATA in this file.</div>';
+    btn.disabled = false;
+    return;
+  }
+
+  try {
+    if (usePersonal) {
+      document.getElementById('resultsArea').innerHTML =
+        '<div class="loading-state"><span class="spinner"></span>Checking your similar-movie pool against streaming...</div>';
+
+      const ranked = Object.values(similarityPool)
+        .filter(entry => !likedMovieIds.has(entry.movie.id))
+        .sort((a, b) => b.count - a.count || b.movie.vote_average - a.movie.vote_average)
+        .map(entry => entry.movie);
+
+      const streamable = await filterToStreamable(ranked, 20);
+
+      if (!streamable.length) {
+        document.getElementById('resultsArea').innerHTML =
+          '<div class="empty-state">None of your similar-movie matches are on your selected services right now. Try adding a service, or switch to Default.</div>';
+        btn.disabled = false;
+        return;
+      }
+
+      document.getElementById('resultsArea').innerHTML =
+        '<div class="loading-state"><span class="spinner"></span>Fetching scores...</div>';
+      const enriched = await enrichMovies(streamable);
+
+      renderRows([
+        { title: "Recommended based on Tejas's favorites", movies: enriched }
+      ]);
+    } else {
+      document.getElementById('resultsArea').innerHTML =
+        '<div class="loading-state"><span class="spinner"></span>Building your rows...</div>';
+
+      const era = document.getElementById('eraSelect').value;
+      const minRating = document.getElementById('minRating').value;
+      const sortBy = document.getElementById('sortBy').value;
+      const mood = document.getElementById('moodSelect').value;
+
+      // Top picks row reflects the mood/era/rating/sort filters directly.
+      const topPicksRaw = await fetchMoviesFromTMDB({ genre: mood, era, minRating, sortBy });
+      const topPicks = await enrichMovies(topPicksRaw.slice(0, 15));
+
+      // Genre rows always apply era/rating/sort as a global narrowing, but
+      // each row is pinned to its own genre regardless of the mood dropdown.
+      const genreRows = await Promise.all(ROW_GENRES.map(async (g) => {
+        try {
+          const raw = await fetchMoviesFromTMDB({ genre: g.id, era, minRating, sortBy });
+          const enriched = await enrichMovies(raw.slice(0, 15));
+          return { title: g.label, movies: enriched };
+        } catch (e) {
+          return { title: g.label, movies: [] };
+        }
+      }));
+
+      const rows = [{ title: 'Top picks for you', movies: topPicks }, ...genreRows]
+        .filter(r => r.movies.length > 0);
+
+      if (!rows.length) {
+        document.getElementById('resultsArea').innerHTML =
+          '<div class="empty-state">No movies matched those filters. Try loosening the era or rating filter.</div>';
+        btn.disabled = false;
+        return;
+      }
+
+      renderRows(rows);
+    }
+  } catch (e) {
+    document.getElementById('resultsArea').innerHTML =
+      `<div class="error-msg">${e.message || 'Something went wrong. Please try again.'}</div>`;
+  }
+  btn.disabled = false;
+}
+
+function renderRows(rows) {
+  rows.forEach(row => row.movies.forEach(m => { movieIndex[m.id] = m; }));
+
+  const html = rows.map((row, rowIdx) => {
+    if (!row.movies.length) {
+      return `
+        <div class="row-section">
+          <h2 class="row-title">${row.title}</h2>
+          <div class="row-empty">Nothing available here right now.</div>
+        </div>
+      `;
+    }
+    return `
+      <div class="row-section">
+        <h2 class="row-title">${row.title}</h2>
+        <div class="row-scroll">
+          ${row.movies.map(m => posterCardHtml(m)).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('resultsArea').innerHTML = html;
+}
+
+function posterCardHtml(m) {
+  const poster = m.poster_path ? `https://image.tmdb.org/t/p/w185${m.poster_path}` : '';
+  const rtVal = m.scores?.rt;
+  return `
+    <div class="poster-card" onclick="showDetail(${m.id})">
+      ${poster
+        ? `<img class="poster-img" src="${poster}" alt="${m.title} poster" loading="lazy">`
+        : `<div class="poster-fallback">${m.title}</div>`}
+      <div class="card-title">${m.title}</div>
+      <div class="card-meta">
+        <span>${m.year}</span>
+        ${rtVal ? `<span class="card-rt">🍅 ${rtVal}</span>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function showDetail(movieId) {
+  const m = movieIndex[movieId];
+  if (!m) return;
+  const genres = (m.genre_ids || []).slice(0, 3).map(g => GENRE_NAMES[g]).filter(Boolean);
+  const poster = m.poster_path ? `https://image.tmdb.org/t/p/w342${m.poster_path}` : '';
+  const rtVal = m.scores?.rt;
+  const rtFresh = rtVal ? parseInt(rtVal) >= 60 : null;
+  const tasteBoosted = m._tasteScore > 0;
+
+  const panel = document.getElementById('detailPanel');
+  panel.innerHTML = `
+    ${poster ? `<img class="poster" src="${poster}" alt="${m.title} poster">` : ''}
+    <div class="detail-body">
+      <div class="detail-header">
+        <div>
+          <div class="detail-title">${m.title}</div>
+          <div class="detail-meta">${m.year} · TMDB ${m.vote_average?.toFixed(1)}/10</div>
+        </div>
+        <button class="detail-close" onclick="closeDetail()">Close</button>
+      </div>
+      <div class="badges">
+        ${m.providers.map(p => `<span class="badge badge-service">${p}</span>`).join('')}
+        ${genres.map(g => `<span class="badge badge-genre">${g}</span>`).join('')}
+        ${rtVal ? `<span class="score ${rtFresh ? 'score-rt-fresh' : 'score-rt-rotten'}">🍅 ${rtVal}</span>` : ''}
+        ${m.scores?.imdb ? `<span class="score score-imdb">★ ${m.scores.imdb}</span>` : ''}
+        ${tasteBoosted ? `<span class="badge badge-boost">Similar to ${m._tasteScore} of your favorites</span>` : ''}
+      </div>
+      <div class="detail-desc">${m.overview || ''}</div>
+    </div>
+  `;
+  panel.classList.add('show');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeDetail() {
+  const panel = document.getElementById('detailPanel');
+  panel.classList.remove('show');
+  panel.innerHTML = '';
+}
+
+checkSetup();
+renderServices();
+setMode('default');
+</script>
+</body>
+</html>
