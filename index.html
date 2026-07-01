@@ -119,6 +119,46 @@
   .service-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
   .chip-name { font-size: 13px; font-weight: 600; }
 
+  .freetext-box {
+    background: var(--surface);
+    border-radius: 4px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .freetext-box label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  .freetext-row { display: flex; gap: 8px; }
+  .freetext-row input[type=text] { flex: 1; }
+  .freetext-btn {
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-radius: 4px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .freetext-btn:hover { background: var(--accent-hover); }
+  .freetext-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+  .freetext-hint.matched { color: var(--green); }
+  .freetext-hint.unmatched { color: var(--accent-text); }
+
   .controls-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -203,121 +243,87 @@
   .badge-boost { background: rgba(70, 211, 105, 0.15); color: var(--green); }
   .movie-desc { font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
 
-  .row-section { margin-bottom: 2.25rem; }
-  .row-title {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 0 0 12px;
-    color: var(--text-primary);
-  }
-  .row-scroll {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 8px;
-    scroll-behavior: smooth;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border-strong) transparent;
-  }
-  .row-scroll::-webkit-scrollbar { height: 6px; }
-  .row-scroll::-webkit-scrollbar-track { background: transparent; }
-  .row-scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
-
-  .poster-card {
-    flex: 0 0 160px;
-    width: 160px;
-    cursor: pointer;
-    position: relative;
-  }
-  .poster-card .poster-img {
-    width: 100%;
-    height: 240px;
-    border-radius: 4px;
-    object-fit: cover;
+  .results { margin-top: 2rem; display: grid; gap: 2px; }
+  .movie-card {
     background: var(--surface);
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: block;
-  }
-  .poster-card:hover .poster-img {
-    transform: scale(1.06);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-    z-index: 2;
-    position: relative;
-  }
-  .poster-card .poster-fallback {
-    width: 100%;
-    height: 240px;
     border-radius: 4px;
-    background: var(--surface);
+    padding: 16px 20px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
-    text-align: center;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-secondary);
+    gap: 16px;
+    transition: background 0.15s;
   }
-  .poster-card .card-title {
-    font-size: 13px;
-    font-weight: 600;
-    margin-top: 8px;
-    color: var(--text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .poster-card .card-meta {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 2px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .poster-card .card-rt { color: var(--accent-text); font-weight: 700; }
-
-  .row-empty {
-    font-size: 13px;
-    color: var(--text-muted);
-    padding: 12px 0;
-  }
-
-  /* Expanded detail panel for a selected movie */
-  .detail-panel {
-    background: var(--surface);
-    border-radius: 6px;
-    padding: 20px 24px;
-    margin-bottom: 2rem;
-    display: none;
-    gap: 20px;
-  }
-  .detail-panel.show { display: flex; }
-  .detail-panel .poster {
-    width: 140px;
-    height: 210px;
-    border-radius: 4px;
+  .movie-card:hover { background: var(--surface-2); }
+  .poster {
+    width: 80px;
+    height: 120px;
+    border-radius: 3px;
     object-fit: cover;
     flex-shrink: 0;
     background: var(--surface-2);
   }
-  .detail-body { flex: 1; min-width: 0; }
-  .detail-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
-  .detail-title { font-size: 22px; font-weight: 800; }
-  .detail-meta { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
-  .detail-close {
-    background: transparent;
-    border: 1px solid var(--border-strong);
-    color: var(--text-secondary);
+  .movie-body { flex: 1; min-width: 0; }
+  .movie-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .movie-title { font-size: 17px; font-weight: 700; }
+  .movie-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .scores { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+  .score {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 3px;
+  }
+  .score-rt-fresh { background: rgba(229, 9, 20, 0.18); color: var(--accent-text); }
+  .score-rt-rotten { background: rgba(120, 120, 120, 0.2); color: var(--text-secondary); }
+  .score-imdb { background: rgba(212, 168, 67, 0.15); color: var(--gold); }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .badge {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 3px 9px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .badge-service { background: var(--accent); color: white; }
+  .badge-genre { background: var(--surface-2); color: var(--text-secondary); border: 1px solid var(--border); }
+  .badge-boost { background: rgba(70, 211, 105, 0.15); color: var(--green); }
+  .movie-desc { font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
+
+  .load-more-btn {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
     border-radius: 4px;
-    padding: 6px 12px;
-    font-size: 12px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-primary);
     cursor: pointer;
     font-family: inherit;
   }
-  .detail-close:hover { color: var(--text-primary); border-color: var(--text-secondary); }
-  .detail-desc { font-size: 14px; color: var(--text-secondary); margin-top: 10px; line-height: 1.6; }
+  .load-more-btn:hover:not(:disabled) { background: var(--surface-2); }
+  .load-more-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .no-more-msg {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
 
   .loading-state, .empty-state, .error-msg {
     text-align: center;
@@ -343,10 +349,8 @@
   footer a { color: var(--accent-text); }
 
   @media (max-width: 480px) {
-    .poster-card { flex: 0 0 120px; width: 120px; }
-    .poster-card .poster-img, .poster-card .poster-fallback { height: 180px; }
-    .detail-panel { flex-direction: column; }
-    .detail-panel .poster { width: 100%; height: 220px; }
+    .movie-card { flex-direction: column; }
+    .poster { width: 100%; height: 200px; }
   }
 </style>
 </head>
@@ -377,26 +381,39 @@
   </section>
 
   <section class="mood-filters" id="moodFiltersSection">
+    <div class="freetext-box">
+      <label for="freeTextInput">What are you in the mood for?</label>
+      <div class="freetext-row">
+        <input type="text" id="freeTextInput" placeholder="e.g. funny 90s movie, scary, something in space, heist film...">
+        <button class="freetext-btn" onclick="applyFreeTextMood()">Search</button>
+      </div>
+      <div class="freetext-hint" id="freeTextHint">
+        Type a few words describing what you're in the mood for.
+      </div>
+    </div>
+
     <div class="controls-row">
       <div class="field">
-        <label for="moodSelect">Mood (for Top picks row)</label>
-        <select id="moodSelect">
+        <label for="moodSelect">Mood</label>
+        <select id="moodSelect" onchange="freeTextMood = null;">
           <option value="any">Anything good</option>
-          <option value="35">Comedy</option>
-          <option value="53">Thriller</option>
-          <option value="18">Heartwarming drama</option>
-          <option value="9648">Mystery / mind-bending</option>
           <option value="28">Action</option>
-          <option value="27">Horror / scary</option>
-          <option value="10749">Romance</option>
-          <option value="10751">Family-friendly</option>
-          <option value="99">Documentary</option>
           <option value="16">Animated</option>
+          <option value="awards">Best Picture Nominee</option>
+          <option value="35">Comedy</option>
+          <option value="acclaimed">Critically acclaimed</option>
+          <option value="99">Documentary</option>
+          <option value="10751">Family-friendly</option>
+          <option value="18">Heartwarming drama</option>
+          <option value="27">Horror / scary</option>
+          <option value="9648">Mystery / mind-bending</option>
+          <option value="10749">Romance</option>
+          <option value="53">Thriller</option>
         </select>
       </div>
       <div class="field">
         <label for="eraSelect">Era</label>
-        <select id="eraSelect">
+        <select id="eraSelect" onchange="freeTextMood = null;">
           <option value="any">Any era</option>
           <option value="2023-01-01,2030-01-01">Recent (2023+)</option>
           <option value="2010-01-01,2020-01-01">2010s</option>
@@ -434,7 +451,6 @@
 
   <button class="generate-btn" id="generateBtn" onclick="getRecommendations()">Get recommendations</button>
 
-  <div class="detail-panel" id="detailPanel"></div>
   <div id="resultsArea"></div>
 
   <footer>
@@ -452,8 +468,8 @@
    TMDB:  https://www.themoviedb.org/settings/api  (instant, free)
    OMDb:  https://www.omdbapi.com/apikey.aspx        (free tier, 1000/day)
    ==================================================================== */
-const TMDB_API_KEY = '28db4993127afd4c7fe7290ffc61e117';
-const OMDB_API_KEY  = 'c2ceb3d5';
+const TMDB_API_KEY = 'YOUR_TMDB_API_KEY';
+const OMDB_API_KEY  = 'YOUR_OMDB_API_KEY';
 /* ==================================================================== */
 
 /* ====================================================================
@@ -478,3634 +494,31 @@ const MY_TASTE_DATA = {
     "10749": 6
   },
   "similarityPool": {
-    "103": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/9uddYYTNcLWpzUkl5iw1RUYhLhY.jpg",
-        "id": 103,
-        "title": "Taxi Driver",
-        "original_title": "Taxi Driver",
-        "overview": "Suffering from insomnia, disturbed loner Travis Bickle takes a job as a New York City cabbie, haunting the streets nightly, growing increasingly detached from reality as he dreams of cleaning up the filthy city.",
-        "poster_path": "/ekstpH614fwDX8DUln1a2Opz0N8.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          80,
-          18
-        ],
-        "popularity": 12.8222,
-        "release_date": "1976-02-09",
-        "softcore": false,
-        "video": false,
-        "vote_average": 8.124,
-        "vote_count": 13501
-      }
-    },
-    "114": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/sGEqHTylawwS6hwKultk1mKUjdB.jpg",
-        "id": 114,
-        "title": "Pretty Woman",
-        "original_title": "Pretty Woman",
-        "overview": "Vivian is a carefree, streetwise diamond in the rough when she meets sophisticated billionaire Edward in a chance encounter that turns into a week-long business arrangement. But Vivian's energetic spirit challenges Edward's no-nonsense approach to life, and soon they are teaching each other – and falling in love!",
-        "poster_path": "/hVHUfT801LQATGd26VPzhorIYza.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10749,
-          35
-        ],
-        "popularity": 11.2062,
-        "release_date": "1990-03-23",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.448,
-        "vote_count": 9022
-      }
-    },
-    "184": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/gvaeY5kz3wHrMU6xLdnybziwYXw.jpg",
-        "id": 184,
-        "title": "Jackie Brown",
-        "original_title": "Jackie Brown",
-        "overview": "Jackie Brown is a flight attendant who gets caught in the middle of smuggling cash into the country for her gunrunner boss. When the cops try to use Jackie to get to her boss, she hatches a plan — with help from a bail bondsman — to keep the money for herself.",
-        "poster_path": "/rOUx7qg4KmEh1juEDwqzbDSL1Nr.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          80,
-          18,
-          53
-        ],
-        "popularity": 6.1203,
-        "release_date": "1997-12-25",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.359,
-        "vote_count": 6972
-      }
-    },
-    "207": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/lFIXZpwwlF9hg8NM3RazaIJDuaj.jpg",
-        "id": 207,
-        "title": "Dead Poets Society",
-        "original_title": "Dead Poets Society",
-        "overview": "At an elite, old-fashioned boarding school in New England, a passionate English teacher inspires his students to rebel against convention and seize the potential of every day, courting the disdain of the stern headmaster.",
-        "poster_path": "/erzbMlcNHOdx24AXOcn2ZKA7R1q.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18
-        ],
-        "popularity": 19.9676,
-        "release_date": "1989-06-02",
-        "softcore": false,
-        "video": false,
-        "vote_average": 8.3,
-        "vote_count": 12669
-      }
-    },
-    "251": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/6nLdSON3ErniBZTXWG7WRqs5jGz.jpg",
-        "id": 251,
-        "title": "Ghost",
-        "original_title": "Ghost",
-        "overview": "After a young man is murdered, his spirit stays behind to warn his lover of impending danger, with the help of a reluctant psychic.",
-        "poster_path": "/w9RaPHov8oM5cnzeE27isnFMsvS.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          14,
-          10749,
-          53
-        ],
-        "popularity": 7.7612,
-        "release_date": "1990-07-13",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.24,
-        "vote_count": 6060
-      }
-    },
-    "277": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/zsgdVbuEwqZbnUN9qLGEMBYf2Zo.jpg",
-        "id": 277,
-        "title": "Underworld",
-        "original_title": "Underworld",
-        "overview": "Vampires and werewolves have waged a nocturnal war against each other for centuries. But all bets are off when a female vampire warrior named Selene, who's famous for her strength and werewolf-hunting prowess, becomes smitten with a peace-loving male werewolf, Michael, who wants to end the war.",
-        "poster_path": "/zsnQ41UZ3jo1wEeemF0eA9cAIU0.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          14,
-          28,
-          53
-        ],
-        "popularity": 6.0547,
-        "release_date": "2003-09-19",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.854,
-        "vote_count": 6622
-      }
-    },
-    "396": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/sZxPKiNCK8piKBtXAbm3Ucj6RQk.jpg",
-        "id": 396,
-        "title": "Who's Afraid of Virginia Woolf?",
-        "original_title": "Who's Afraid of Virginia Woolf?",
-        "overview": "A history professor and his wife entertain a young couple who are new to the university's faculty. As the drinks flow, secrets come to light, and the middle-aged couple unload onto their guests the full force of the bitterness, dysfunction, and animosity that defines their marriage.",
-        "poster_path": "/wF7ihB5V5gSm6zxjv3ZhHOpgREI.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18
-        ],
-        "popularity": 2.8265,
-        "release_date": "1966-06-22",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.686,
-        "vote_count": 920
-      }
-    },
-    "559": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/w1oD1MzHjnBJc5snKupIQaSBLIh.jpg",
-        "id": 559,
-        "title": "Spider-Man 3",
-        "original_title": "Spider-Man 3",
-        "overview": "The seemingly invincible Spider-Man goes up against an all-new crop of villains—including the shape-shifting Sandman. While Spider-Man’s superpowers are altered by an alien organism, his alter ego, Peter Parker, deals with nemesis Eddie Brock and also gets caught up in a love triangle.",
-        "poster_path": "/qFmwhVUoUSXjkKRmca5yGDEXBIj.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          12,
-          878
-        ],
-        "popularity": 21.1211,
-        "release_date": "2007-05-01",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.462,
-        "vote_count": 15295
-      }
-    },
-    "629": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/hy0Hx9fMPk2fmw26Li60z1S2giU.jpg",
-        "id": 629,
-        "title": "The Usual Suspects",
-        "original_title": "The Usual Suspects",
-        "overview": "Held in an L.A. interrogation room, Verbal Kint attempts to convince the feds that a mythic crime lord, Keyser Soze, not only exists, but was also responsible for drawing him and his four partners into a multi-million dollar heist that ended with an explosion in San Pedro harbor – leaving few survivors. Verbal lures his interrogators with an incredible story of the crime lord's almost supernatural prowess.",
-        "poster_path": "/99X2SgyFunJFXGAYnDv3sb9pnUD.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          80,
-          53
-        ],
-        "popularity": 12.0779,
-        "release_date": "1995-07-19",
-        "softcore": false,
-        "video": false,
-        "vote_average": 8.168,
-        "vote_count": 11471
-      }
-    },
-    "688": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/4TnGcUsyd6ixuLWHaaEG5BGkAIp.jpg",
-        "id": 688,
-        "title": "The Bridges of Madison County",
-        "original_title": "The Bridges of Madison County",
-        "overview": "Photographer Robert Kincaid wanders into the life of housewife Francesca Johnson for four days in the 1960s.",
-        "poster_path": "/aCBrhOQjhG397GLkEZ49zReQEKX.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 4.5803,
-        "release_date": "1995-06-02",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.7,
-        "vote_count": 2384
-      }
-    },
-    "821": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/aSlDcWtKNfRkW0SbsnEjnGBs9jV.jpg",
-        "id": 821,
-        "title": "Judgment at Nuremberg",
-        "original_title": "Judgment at Nuremberg",
-        "overview": "In 1947, four German judges who served on the bench during the Nazi regime face a military tribunal to answer charges of crimes against humanity. Chief Justice Haywood hears evidence and testimony not only from lead defendant Ernst Janning and his defense attorney Hans Rolfe, but also from the widow of a Nazi general, an idealistic U.S. Army captain and reluctant witness Irene Wallner.",
-        "poster_path": "/b6vYatvui1EXeFYfpDX4rcbueuP.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          36
-        ],
-        "popularity": 3.6442,
-        "release_date": "1961-12-18",
-        "softcore": false,
-        "video": false,
-        "vote_average": 8.007,
-        "vote_count": 951
-      }
-    },
-    "824": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/vvcLSgiviCIU0J0UcwLqWdU8Iup.jpg",
-        "id": 824,
-        "title": "Moulin Rouge!",
-        "original_title": "Moulin Rouge!",
-        "overview": "A celebration of love and creative inspiration takes place in the infamous, gaudy and glamorous Parisian nightclub, at the cusp of the 20th century. A young poet, who is plunged into the heady world of Moulin Rouge, begins a passionate affair with the club's most notorious and beautiful star.",
-        "poster_path": "/2kjM5CUZRIU5yOANUowrbJcRL9L.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749,
-          10402
-        ],
-        "popularity": 6.1986,
-        "release_date": "2001-05-18",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.527,
-        "vote_count": 4867
-      }
-    },
-    "834": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/lao4tAa7y5QX5benDMyIeeRiTCb.jpg",
-        "id": 834,
-        "title": "Underworld: Evolution",
-        "original_title": "Underworld: Evolution",
-        "overview": "As the war between the vampires and the Lycans rages on, Selene, a former member of the Death Dealers (an elite vampire special forces unit that hunts werewolves), and Michael, the werewolf hybrid, work together in an effort to unlock the secrets of their respective bloodlines.",
-        "poster_path": "/oJaQG353uOzOqffQ5K2hg03k4Vp.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          14,
-          28,
-          53
-        ],
-        "popularity": 5.5354,
-        "release_date": "2006-01-12",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.603,
-        "vote_count": 4393
-      }
-    },
-    "946": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/7amSQSipxgiQnEejWX6iQonFrZI.jpg",
-        "id": 946,
-        "title": "Letter from an Unknown Woman",
-        "original_title": "Letter from an Unknown Woman",
-        "overview": "A pianist about to flee from a duel receives a letter from a woman he cannot remember. As she tells the story of her lifelong love for him, he is forced to reinterpret his own past.",
-        "poster_path": "/gRGRW7DKyK8qBtKJTWguULMGbHG.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 1.6257,
-        "release_date": "1948-04-28",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.784,
-        "vote_count": 343
-      }
-    },
-    "949": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/xKsnZDERG1dk95wuZ5q9iks3OL3.jpg",
-        "id": 949,
-        "title": "Heat",
-        "original_title": "Heat",
-        "overview": "Obsessive master thief Neil McCauley leads a top-notch crew on various daring heists throughout Los Angeles while determined detective Vincent Hanna pursues him without rest. Each man recognizes and respects the ability and the dedication of the other even though they are aware their cat-and-mouse game may end in violence.",
-        "poster_path": "/e09dLw1Ljtccd2P4NsuUvVtS5du.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          80,
-          18,
-          28
-        ],
-        "popularity": 16.9721,
-        "release_date": "1995-12-15",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.937,
-        "vote_count": 8411
-      }
-    },
-    "1491": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/8ScGUtKTupr5rVLiXRmffjKMRhH.jpg",
-        "id": 1491,
-        "title": "The Illusionist",
-        "original_title": "The Illusionist",
-        "overview": "With his eye on a lovely aristocrat, a gifted illusionist named Eisenheim uses his powers to win her away from her betrothed, a crown prince. But Eisenheim's scheme creates tumult within the monarchy and ignites the suspicion of a dogged inspector.",
-        "poster_path": "/1O9jUvqkHaGBMVRyOJz1AlkmALW.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          14,
-          18,
-          53,
-          10749
-        ],
-        "popularity": 4.4893,
-        "release_date": "2006-08-18",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.298,
-        "vote_count": 5345
-      }
-    },
-    "1895": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/jniabJVBSW3EqLlyhjxWCZjVkiE.jpg",
-        "id": 1895,
-        "title": "Star Wars: Episode III - Revenge of the Sith",
-        "original_title": "Star Wars: Episode III - Revenge of the Sith",
-        "overview": "When the sinister Sith unveil a thousand-year-old plot to rule the galaxy, the Republic crumbles and from its ashes rises the evil Galactic Empire. Jedi hero Anakin Skywalker must choose a side.",
-        "poster_path": "/xfSAoBEm9MNBjmlNcDYLvLSMlnq.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          12,
-          28,
-          878
-        ],
-        "popularity": 10.1745,
-        "release_date": "2005-05-17",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.469,
-        "vote_count": 15011
-      }
-    },
-    "1908": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/es4sV6krplqscHmhn9TFSqkl8ee.jpg",
-        "id": 1908,
-        "title": "Inherit the Wind",
-        "original_title": "Inherit the Wind",
-        "overview": "Schoolteacher Bertram Cates is arrested for teaching his students Darwin's theory of evolution. The case receives national attention and one of the newspaper reporters, E.K. Hornbeck, arranges to bring in renowned defense attorney and atheist Henry Drummond to defend Cates. The prosecutor, Matthew Brady is a former presidential candidate, famous evangelist, and old adversary of Drummond.",
-        "poster_path": "/7oaHcF0gCOt2lKaT2zajhajP0Zo.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18
-        ],
-        "popularity": 1.8727,
-        "release_date": "1960-07-07",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.666,
-        "vote_count": 472
-      }
-    },
-    "2069": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/pqVFdQDe0wbZRKg6GDyx3ghYXag.jpg",
-        "id": 2069,
-        "title": "The Whole Nine Yards",
-        "original_title": "The Whole Nine Yards",
-        "overview": "After a mobster agrees to cooperate with an FBI investigation in order to stay out of prison, he's relocated by the authorities to a life of suburban anonymity as part of a witness protection program. It's not long before a couple of his new neighbours figure out his true identity and come knocking to see if he'd be up for one more hit—suburban style.",
-        "poster_path": "/rDV7ntPLY0ZDBT722Odsi80nFrn.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          80
-        ],
-        "popularity": 4.7318,
-        "release_date": "2000-02-18",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.463,
-        "vote_count": 2081
-      }
-    },
-    "2144": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/iScUbPQyjW67hoiFnSGZLrF0SLk.jpg",
-        "id": 2144,
-        "title": "One Night at McCool's",
-        "original_title": "One Night at McCool's",
-        "overview": "On an ordinary night, in an ordinary part of town, a beautiful young woman walks into a bar. Her name is Jewel, and before long she is chatting to bartender Randy. The pair leave together, but he ends up getting into a tussle with her criminal boyfriend, who she then shoots dead, later persuading Randy to take the rap for her. But this isn't the end of it, as both Randy's cousin Carl and the detective assigned to the murder case also fall for Jewel's charms and find themselves caught up in the ensuing events. It seems that any man who meets Jewel falls instantly in love with her, and she's going to use this fully to her own advantage, leaving a trail of havoc in her wake. It also seems that she is going to get away with it - that is, until Randy decides to hire a hitman...",
-        "poster_path": "/aIJAjhdMqraB1tkSii9BWuUXd8q.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          80
-        ],
-        "popularity": 1.926,
-        "release_date": "2001-04-19",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.854,
-        "vote_count": 376
-      }
-    },
-    "2321": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/4aE6V8KQsg1NNu6fgdpJFrmtnok.jpg",
-        "id": 2321,
-        "title": "Married to the Mob",
-        "original_title": "Married to the Mob",
-        "overview": "Angela de Marco is fed up with her gangster husband's line of work and wants no part of the crime world. When her husband is killed for having an affair with the mistress of mob boss Tony \"The Tiger\" Russo, Angela and her son depart for New York City to make a fresh start. Unfortunately, Tony has set his sights upon Angela -- and so has an undercover FBI agent looking to use her to bust Tony.",
-        "poster_path": "/gkOsxv1RvV5smRnm6wrmn2wDXyZ.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          80,
-          10749
-        ],
-        "popularity": 2.0985,
-        "release_date": "1988-08-19",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.977,
-        "vote_count": 326
-      }
-    },
-    "4176": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/tAXK5R0ytrN2l2qgGfyxums5J0w.jpg",
-        "id": 4176,
-        "title": "Murder on the Orient Express",
-        "original_title": "Murder on the Orient Express",
-        "overview": "In 1935, when his train is stopped by deep snow, detective Hercule Poirot is called on to solve a murder that occurred in his car the night before.",
-        "poster_path": "/x7E9iNMi5iFTdUNJvEZ1x8YNEZ2.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          53,
-          9648
-        ],
-        "popularity": 4.5304,
-        "release_date": "1974-11-22",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.148,
-        "vote_count": 1585
-      }
-    },
-    "4193": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/kv20JYfmzLyYi1vV0ocryyju3zl.jpg",
-        "id": 4193,
-        "title": "Evil Under the Sun",
-        "original_title": "Evil Under the Sun",
-        "overview": "An opulent beach resort provides a scenic background to this amusing whodunit as Poirot attempts to uncover the nefarious evildoer behind the strangling of a notorious stage star.",
-        "poster_path": "/rQNMZoVVURf9YyYiBTsrOTEKALH.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          80,
-          9648,
-          18
-        ],
-        "popularity": 2.8524,
-        "release_date": "1982-03-05",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.9,
-        "vote_count": 513
-      }
-    },
-    "4281": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/jcJjcbn1XQ9NbiueAtJIE0kwZg2.jpg",
-        "id": 4281,
-        "title": "Appointment with Death",
-        "original_title": "Appointment with Death",
-        "overview": "Emily Boynton, the stepmother to three children, blackmails the family lawyer into destroying a second will of her late husband that would have freed the children from her dominating influence. She takes herself, the children, and her daughter-in-law on holiday to Europe and the Holy Land. At a dig, Emily is found dead and Hercule Poirot investigates.",
-        "poster_path": "/fnHtgkOgYznDOh9lmK5MLiJpxVU.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          80,
-          9648,
-          18
-        ],
-        "popularity": 1.6277,
-        "release_date": "1988-04-15",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.126,
-        "vote_count": 175
-      }
-    },
-    "5038": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/uU7Ctqx6V27BXWhWgxcnFWaYYHz.jpg",
-        "id": 5038,
-        "title": "Vicky Cristina Barcelona",
-        "original_title": "Vicky Cristina Barcelona",
-        "overview": "Two girlfriends on a summer holiday in Spain become enamored with the same painter, unaware that his ex-wife, with whom he has a tempestuous relationship, is about to re-enter the picture.",
-        "poster_path": "/ekAIg0GSbbHTH7y1GPgWj0brLTW.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 4.5273,
-        "release_date": "2008-08-15",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.802,
-        "vote_count": 4036
-      }
-    },
-    "5236": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/kKdBNPXfjENj3wG5qtiCrZ2wflp.jpg",
-        "id": 5236,
-        "title": "Kiss Kiss Bang Bang",
-        "original_title": "Kiss Kiss Bang Bang",
-        "overview": "A petty thief posing as an actor is brought to Los Angeles for an unlikely audition and finds himself in the middle of a murder investigation along with his high school dream girl and a detective who's been training him for his upcoming role...",
-        "poster_path": "/aWfjIkpENFX6Uw82pET7EQ6jnrd.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          80,
-          9648
-        ],
-        "popularity": 3.4441,
-        "release_date": "2005-09-14",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.161,
-        "vote_count": 3030
-      }
-    },
-    "5916": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/reqscfk2KrWSDPKLMY303nwNgTw.jpg",
-        "id": 5916,
-        "title": "The Getaway",
-        "original_title": "The Getaway",
-        "overview": "A recently released ex-convict and his loyal wife go on the run after a heist goes wrong.",
-        "poster_path": "/8SvnGUJsr16zUJ2CN7ONX1ZWtZ8.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          80,
-          53
-        ],
-        "popularity": 2.9637,
-        "release_date": "1972-12-13",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.142,
-        "vote_count": 666
-      }
-    },
-    "5966": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/d0oHN3xA6TxOvADW64OiyYFpLOf.jpg",
-        "id": 5966,
-        "title": "Along Came Polly",
-        "original_title": "Along Came Polly",
-        "overview": "Reuben Feffer is a guy who's spent his entire life playing it safe. Polly Prince is irresistible as a free-spirit who lives for the thrill of the moment. When these two comically mismatched souls collide, Reuben's world is turned upside down, as he makes an uproarious attempt to change his life from middle-of-the-road to totally-out-there.",
-        "poster_path": "/7Tp16THdpHkMrqgoiDresDz9CWL.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          10749
-        ],
-        "popularity": 3.9055,
-        "release_date": "2004-01-16",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.029,
-        "vote_count": 3038
-      }
-    },
-    "6107": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/rMMcyGgq0qO7o7dzUFmlx5LxxnA.jpg",
-        "id": 6107,
-        "title": "Murder in Three Acts",
-        "original_title": "Murder in Three Acts",
-        "overview": "In Acapulco, Hercule Poirot attends a dinner party in which one of the guests clutches his throat and suddenly dies. The causes seem to be natural until another party with most of the same guests produces another corpse.",
-        "poster_path": "/2qEaWC5N5q2VcAsphXkljZlfvFH.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          80,
-          18,
-          9648
-        ],
-        "popularity": 1.0766,
-        "release_date": "1986-09-30",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.873,
-        "vote_count": 75
-      }
-    },
-    "8065": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/u6OCGwhSWhfQX1LZ4NTq0bfcWxs.jpg",
-        "id": 8065,
-        "title": "21",
-        "original_title": "21",
-        "overview": "Ben Campbell is a young, highly intelligent student at M.I.T. who strives to succeed. Wanting a scholarship to transfer to Harvard School of Medicine to become a doctor, Ben learns that he cannot afford the $300,000 tuition as he comes from a poor, working-class background. But one evening, Ben is introduced by his unorthodox math professor to a small but secretive club of five students, Jill, Choi, Kianna, and Fisher, who are being trained by Professor Rosa to count cards at blackjack.",
-        "poster_path": "/efG8Po57alqSlhqHU1lXJ3duG6t.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          80
-        ],
-        "popularity": 4.6762,
-        "release_date": "2008-03-27",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.7,
-        "vote_count": 5063
-      }
-    },
-    "8461": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/6P4R7kYUdJprHpyBmOQO6aB85xX.jpg",
-        "id": 8461,
-        "title": "Funny Games",
-        "original_title": "Funny Games",
-        "overview": "When Ann, husband George, and son Georgie arrive at their holiday home they are visited by a pair of polite and seemingly pleasant young men. Armed with deceptively sweet smiles and some golf clubs, they proceed to terrorize and torture the tight-knit clan, giving them until the next day to survive.",
-        "poster_path": "/zs92sAOh3Q0kDIJkgaJFTBzSFka.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          27
-        ],
-        "popularity": 3.5016,
-        "release_date": "2008-03-14",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.56,
-        "vote_count": 2282
-      }
-    },
-    "8834": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/70tmPOoCJCciWaM1vDvXAi4w3Bc.jpg",
-        "id": 8834,
-        "title": "Conspiracy Theory",
-        "original_title": "Conspiracy Theory",
-        "overview": "A man obsessed with conspiracy theories becomes a target after one of his theories turns out to be true. Unfortunately, in order to save himself, he has to figure out which theory it is.",
-        "poster_path": "/sTyTKZVikQU6g50HE8HR1tBSRxj.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          18,
-          9648,
-          53
-        ],
-        "popularity": 3.8149,
-        "release_date": "1997-08-08",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.63,
-        "vote_count": 1657
-      }
-    },
-    "9481": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/oOoy2MqPeuDqeedQyouFfitncei.jpg",
-        "id": 9481,
-        "title": "The Bone Collector",
-        "original_title": "The Bone Collector",
-        "overview": "Lincoln Rhyme was the department's top homicide detective and leading expert in criminal forensics until an injury left him paralyzed, depressed, and incapable of working. But when a gruesome murder in Manhattan leaves detectives baffled, they call on Rhyme to help solve the mystery. Amelia Donaghy, a rookie cop whose quick thinking preserved a gruesome murder scene, is enlisted by Rhyme to be his on-the-scene forensics expert. With Amelia reluctantly acting as Rhyme's able-bodied go-between, the pair piece together cryptic clues the killer leaves behind at the scene of the crime, hoping to catch the grisly serial killer.",
-        "poster_path": "/7atMCqRaDpAOnGsteTRm17zmvN3.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          80,
-          53,
-          18,
-          9648
-        ],
-        "popularity": 3.7271,
-        "release_date": "1999-11-04",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.803,
-        "vote_count": 3898
-      }
-    },
-    "9495": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/2VN9umruwVZsT1Pr1NMCV71HpUu.jpg",
-        "id": 9495,
-        "title": "The Crow",
-        "original_title": "The Crow",
-        "overview": "Exactly one year after young rock guitarist Eric Draven and his fiancée are brutally killed by a ruthless gang of criminals, Draven, watched over by a hypnotic crow, returns from the grave to exact revenge.",
-        "poster_path": "/rMMB3v6jYHjsvXRNJYESacoTD7j.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          14,
-          28,
-          53
-        ],
-        "popularity": 6.8021,
-        "release_date": "1994-05-11",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.525,
-        "vote_count": 4551
-      }
-    },
-    "9543": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/iP0capCU4w5nxCDl398CH7yR1r9.jpg",
-        "id": 9543,
-        "title": "Prince of Persia: The Sands of Time",
-        "original_title": "Prince of Persia: The Sands of Time",
-        "overview": "A rogue prince reluctantly joins forces with a mysterious princess and together, they race against dark forces to safeguard an ancient dagger capable of releasing the Sands of Time – gift from the gods that can reverse time and allow its possessor to rule the world.",
-        "poster_path": "/siNGMLdOUNYLEGtlsnmQcpO2XZX.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          12,
-          14,
-          28
-        ],
-        "popularity": 6.8666,
-        "release_date": "2010-05-19",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.304,
-        "vote_count": 7201
-      }
-    },
-    "9573": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/7mEYBXThyEK2IM6j88e1ZJr9eli.jpg",
-        "id": 9573,
-        "title": "Blood Work",
-        "original_title": "Blood Work",
-        "overview": "Still recovering from a heart transplant, a retired FBI profiler returns to service when his own blood analysis offers clues to the identity of a serial killer.",
-        "poster_path": "/A6wWJkIREagRWFNu3YotID3n9aW.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          80,
-          28,
-          9648
-        ],
-        "popularity": 2.0309,
-        "release_date": "2002-08-09",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.207,
-        "vote_count": 899
-      }
-    },
-    "9944": {
-      "count": 2,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/dMFVSGbgtVTedpewA4PHykQuEEK.jpg",
-        "id": 9944,
-        "title": "The Pelican Brief",
-        "original_title": "The Pelican Brief",
-        "overview": "A law student's theory about the recent deaths of two Supreme Court justices embroils her in a far-reaching web of murder, corruption, and greed.",
-        "poster_path": "/7B1HS0SqfJR1jbeHS6V0ZWdzLXP.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          80,
-          18
-        ],
-        "popularity": 4.2312,
-        "release_date": "1993-09-17",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.593,
-        "vote_count": 1783
-      }
-    },
-    "9945": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/uzlGbsQkpK6C3ZiqRqKw9CwK0Do.jpg",
-        "id": 9945,
-        "title": "Vampires",
-        "original_title": "Vampires",
-        "overview": "The church enlists a team of vampire-hunters to hunt down and destroy a group of vampires searching for an ancient relic that will allow them to exist in sunlight.",
-        "poster_path": "/4JhaFBPwyC5IM1rKaRR07Gzutse.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          14,
-          27
-        ],
-        "popularity": 2.7169,
-        "release_date": "1998-10-30",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.315,
-        "vote_count": 1365
-      }
-    },
-    "10056": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/7ZbNuSp186oxSjdtz5npRLLjVSb.jpg",
-        "id": 10056,
-        "title": "Killer's Kiss",
-        "original_title": "Killer's Kiss",
-        "overview": "Davey Gordon, a New York City boxer at the end of his career, falls for dancer Gloria Price. However, their budding relationship is interrupted by Gloria's violent boss, Vincent Rapallo, who has eyes for Gloria. The two decide to skip town, but before they can, Vincent and his thugs abduct Gloria, and Davey is forced to search for her among the most squalid corners of the city, with his enemy hiding in the shadows.",
-        "poster_path": "/rLbad0lscycS4R3qTSrKguZ0Zz5.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          80,
-          18
-        ],
-        "popularity": 2.0194,
-        "release_date": "1955-10-01",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.346,
-        "vote_count": 607
-      }
-    },
-    "10297": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/pkOgOztKdFadcarmNZwrOcNHrdq.jpg",
-        "id": 10297,
-        "title": "How to Marry a Millionaire",
-        "original_title": "How to Marry a Millionaire",
-        "overview": "Three women set out to find eligible millionaires to marry, but find true love in the process.",
-        "poster_path": "/dFwefYyEOOZaWVn15xGY6CbYYJ2.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          10749
-        ],
-        "popularity": 1.6785,
-        "release_date": "1953-11-10",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.83,
-        "vote_count": 562
-      }
-    },
-    "10502": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/eq5mrlYcu142Z8io1bdVPwGxx34.jpg",
-        "id": 10502,
-        "title": "The Man Without a Face",
-        "original_title": "The Man Without a Face",
-        "overview": "Justin McLeod is a former teacher who lives as a recluse on the edge of town after his face is disfigured from an automobile accident ten years earlier, in which a boy was incinerated--and for which he was convicted of involuntary manslaughter. Also suspected of being a paedophile, he is befriended by Chuck, causing the town's suspicions and hostility to be ignited.",
-        "poster_path": "/9dmH2jc6jwlZo90JQTFOx4XaBWt.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18
-        ],
-        "popularity": 1.4172,
-        "release_date": "1993-08-25",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.548,
-        "vote_count": 560
-      }
-    },
-    "10863": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/jx0dnBaFNbfdPLyRYUIL1As08Tm.jpg",
-        "id": 10863,
-        "title": "Eye of the Needle",
-        "original_title": "Eye of the Needle",
-        "overview": "Great Britain, 1944, during World War II. Relentlessly pursued by several MI5 agents, Henry Faber the Needle, a ruthless German spy in possession of vital information about D-Day, takes refuge on Storm Island, an inhospitable, sparsely inhabited island off the coast of northern Scotland.",
-        "poster_path": "/nDPnfXCuh280WHPk7xTfG7cDlAh.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          53
-        ],
-        "popularity": 1.7538,
-        "release_date": "1981-07-24",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.7,
-        "vote_count": 254
-      }
-    },
-    "11036": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/zdXnJqBaGFVtLoPNuMeKfEYUViZ.jpg",
-        "id": 11036,
-        "title": "The Notebook",
-        "original_title": "The Notebook",
-        "overview": "An epic love story centered around an older man who reads aloud to a woman with Alzheimer's. From a faded notebook, the old man's words bring to life the story about a couple who is separated by World War II, and is then passionately reunited, seven years later, after they have taken different paths.",
-        "poster_path": "/rNzQyW4f8B8cQeg7Dgj3n6eT5k9.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10749,
-          18
-        ],
-        "popularity": 22.1489,
-        "release_date": "2004-06-25",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.888,
-        "vote_count": 12618
-      }
-    },
-    "11384": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/fvpDegC0EGBZCZPDHDineAL4P8F.jpg",
-        "id": 11384,
-        "title": "The Hard Way",
-        "original_title": "The Hard Way",
-        "overview": "Seeking to raise his credibility as an actor and to land a role as a tough cop on a new show, Hollywood action star Nick Lang works a deal with New York City Police Capt. Brix, who by chance is one of his fans. Nick will be paired with detective Lt. John Moss and learn how to act like a real cop. But when Nick drives John crazy with questions and imitating him, he gets in the way of John's pursuit of a serial killer.",
-        "poster_path": "/k7RhWe8ebHGPp40DDTfFTEoL6CO.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          35,
-          80
-        ],
-        "popularity": 2.8321,
-        "release_date": "1991-03-08",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.165,
-        "vote_count": 481
-      }
-    },
-    "11889": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/xoLuu4u6CpiL72n5nLo2f4H9613.jpg",
-        "id": 11889,
-        "title": "Iris",
-        "original_title": "Iris",
-        "overview": "True story of the lifelong romance between novelist Iris Murdoch and her husband John Bayley, from their student days through her battle with Alzheimer's disease.",
-        "poster_path": "/yheTJ4f7Qlw96GdBjSj6FidvEZg.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 2.4293,
-        "release_date": "2001-12-14",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.394,
-        "vote_count": 218
-      }
-    },
-    "11975": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/c9RwZm40IizTKwWPO933SyDufHS.jpg",
-        "id": 11975,
-        "title": "The Rainmaker",
-        "original_title": "The Rainmaker",
-        "overview": "Fresh out of law school and desperate for work, idealistic rookie Rudy Baylor takes on a powerful insurance company accused of denying a dying boy’s claim. Teaming up with a scrappy, unlicensed paralegal, he finds himself in a David-versus-Goliath courtroom battle that tests his ethics, courage, and belief in justice.",
-        "poster_path": "/twLGHXPjQtS8UyVGp5GXmhJiTM7.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          80,
-          53
-        ],
-        "popularity": 3.7717,
-        "release_date": "1997-11-18",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.026,
-        "vote_count": 1495
-      }
-    },
-    "12520": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/3yLMuH0Xp5gp7Wls3LfcVn6lVU9.jpg",
-        "id": 12520,
-        "title": "The Last Supper",
-        "original_title": "The Last Supper",
-        "overview": "A group of idealistic but frustrated liberals succumb to the temptation of murdering right-wing pundits for their political beliefs.",
-        "poster_path": "/oIgPiiM0qD1mCo1SYG3Sd0vmKTa.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          53,
-          80,
-          18
-        ],
-        "popularity": 1.5799,
-        "release_date": "1995-09-08",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.522,
-        "vote_count": 298
-      }
-    },
-    "12719": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/fu8pdH9bV7ILcgoRqPiMOQB41Bx.jpg",
-        "id": 12719,
-        "title": "Flashback",
-        "original_title": "Flashback",
-        "overview": "A hippie radical, Huey Walker has been a fugitive for decades, accused of a crime that he may not have committed. Finally apprehended, Walker is escorted to trial by uptight 20-something FBI agent John Buckner. While the two seem to be polar opposites, it turns out that Buckner may have more in common with Walker than is initially apparent, a point that is driven home when the pair faces off against a sinister small-town sheriff.",
-        "poster_path": "/zHJbL26SdgeWbKFJVKNfEI4LJwS.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          35,
-          80
-        ],
-        "popularity": 1.3293,
-        "release_date": "1990-02-02",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.362,
-        "vote_count": 105
-      }
-    },
-    "12919": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/orSiH0y4r0BwFxNdWhNKkgPocQx.jpg",
-        "id": 12919,
-        "title": "Can't Buy Me Love",
-        "original_title": "Can't Buy Me Love",
-        "overview": "Nerdy high schooler Ronald Miller rescues cheerleader Cindy Mancini from parental punishment after she accidentally destroys her mother's designer clothes. Ronald agrees to pay for the $1,000 outfit on one condition: that she will act as though they're a couple for an entire month. As the days pass, however, Cindy grows fond of Ronald, making him popular. But when Ronald's former best friend gets left behind, he realizes that social success isn't everything.",
-        "poster_path": "/qK3yiqo84U3twOOKOx81c407Hpr.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          10749
-        ],
-        "popularity": 3.267,
-        "release_date": "1987-08-14",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.887,
-        "vote_count": 718
-      }
-    },
-    "13483": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/nAVntSurtINQNtYPU7ijgCtgz7W.jpg",
-        "id": 13483,
-        "title": "Awake",
-        "original_title": "Awake",
-        "overview": "While undergoing heart surgery, a man experiences a phenomenon called ‘anesthetic awareness’, which leaves him awake but paralyzed throughout the operation. As various obstacles present themselves, his wife must make life-altering decisions while wrestling with her own personal drama.",
-        "poster_path": "/xqooV6lR1Kdx4Q52Sim0aGbDTYP.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          80,
-          9648
-        ],
-        "popularity": 3.9237,
-        "release_date": "2007-11-28",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.573,
-        "vote_count": 1562
-      }
-    },
-    "13825": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/g3aLgQI4aw7aCucYSqXM4CzNYMu.jpg",
-        "id": 13825,
-        "title": "The Lazarus Project",
-        "original_title": "The Lazarus Project",
-        "overview": "After Ben Garvey foolishly turned back to crime, he thought his life was over when he was sentenced to death by lethal injection. But his death sentence isn't quite what it seems, as Ben regains consciousness near an eerie psychiatric ward, where he's told he's been hired as the groundskeeper. With the state of his soul in question, and the love for his wife and daughter all the more real and powerful, Ben must figure out if he's truly cheated death, or if he's become part of something far more sinister.",
-        "poster_path": "/qxf1AkFJskLrBM2WGwf8FpGcbiu.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          53
-        ],
-        "popularity": 2.8226,
-        "release_date": "2008-10-24",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6,
-        "vote_count": 395
-      }
-    },
-    "13949": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/dd4KuEWZNoLp733pPmrWFTvhCp0.jpg",
-        "id": 13949,
-        "title": "Persuasion",
-        "original_title": "Persuasion",
-        "overview": "Anne Elliot was once in love with Frederick Wentworth, a commander in the Royal Navy who was rejected by her snobby parents eight years ago. When the family hits hard times and are forced to rent out their mansion to his brother-in-law, Frederick returns as a captain - but will he remember Anne?",
-        "poster_path": "/rDv38jqf3t0n4F9wGkQXBLx7wN9.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749,
-          10770
-        ],
-        "popularity": 1.5627,
-        "release_date": "2007-04-01",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.249,
-        "vote_count": 285
-      }
-    },
-    "14161": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/x9GeCXTGiPcmQcCsd1yzbNnx3up.jpg",
-        "id": 14161,
-        "title": "2012",
-        "original_title": "2012",
-        "overview": "Dr. Adrian Helmsley, part of a worldwide geophysical team investigating the effect on the earth of radiation from unprecedented solar storms, learns that the earth's core is heating up. He warns U.S. President Thomas Wilson that the crust of the earth is becoming unstable and that without proper preparations for saving a fraction of the world's population, the entire race is doomed. Meanwhile, writer Jackson Curtis stumbles on the same information. While the world's leaders race to build \"arks\" to escape the impending cataclysm, Curtis struggles to find a way to save his family. Meanwhile, volcanic eruptions and earthquakes of unprecedented strength wreak havoc around the world.",
-        "poster_path": "/zaqam2RNscH5ooYFWInV6hjx6y5.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          12,
-          878
-        ],
-        "popularity": 12.3117,
-        "release_date": "2009-10-10",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.883,
-        "vote_count": 12789
-      }
-    },
-    "14815": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/4rw8hb8Idl48PXLss01sXbYnwDf.jpg",
-        "id": 14815,
-        "title": "The Wind and the Lion",
-        "original_title": "The Wind and the Lion",
-        "overview": "At the beginning of the 20th century an American woman is abducted in Morocco by Berbers, and the attempts to free her range from diplomatic pressure to military intervention.",
-        "poster_path": "/3QLqEZL1kBBfKjVz3nAm5vJruRZ.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          12,
-          18,
-          36
-        ],
-        "popularity": 1.5245,
-        "release_date": "1975-05-22",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.476,
-        "vote_count": 210
-      }
-    },
-    "14834": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/fEzQMQwJQQmESQuEXYdIyz0qySm.jpg",
-        "id": 14834,
-        "title": "Not Easily Broken",
-        "original_title": "Not Easily Broken",
-        "overview": "A car accident and shifting affections test the bond between a married couple.",
-        "poster_path": "/8gmdToawg8gaSe9yWZjQ10v7noL.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 1.7487,
-        "release_date": "2009-01-09",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.291,
-        "vote_count": 74
-      }
-    },
-    "15157": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/bR0GpnGUCN7uxRmXtnJr9s19Jrb.jpg",
-        "id": 15157,
-        "title": "Another Cinderella Story",
-        "original_title": "Another Cinderella Story",
-        "overview": "A guy who danced with what could be the girl of his dreams at a costume ball only has one hint at her identity: the Zune she left behind as she rushed home in order to make her curfew. And with a once-in-a-lifetime opportunity in front of him, he sets out to find his masked beauty.",
-        "poster_path": "/bW957WNXiiUvIGFaUVL7wMeD776.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10402,
-          35,
-          10749,
-          10751
-        ],
-        "popularity": 3.3857,
-        "release_date": "2008-09-16",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.329,
-        "vote_count": 2132
-      }
-    },
-    "16131": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/rLgPvANrOztHnu1ZTmecU6LdtU5.jpg",
-        "id": 16131,
-        "title": "Undertow",
-        "original_title": "Undertow",
-        "overview": "The Munns, father John and sons Chris and Tim, recede to the woods of rural Georgia. Their life together is forever changed with the arrival of Uncle Deel, though the tragedy that follows forces troubled Chris to become a man.",
-        "poster_path": "/dWjsI848P3kPT0wbVYZ8huydJPW.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          53
-        ],
-        "popularity": 1.6024,
-        "release_date": "2004-10-22",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.1,
-        "vote_count": 137
-      }
-    },
-    "17015": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/evCHYeumw4Y4hikG4AG9o5yZXUW.jpg",
-        "id": 17015,
-        "title": "Persuasion",
-        "original_title": "Persuasion",
-        "overview": "In early 19th-century England, dire financial straits reacquaint the aristocratic Anne Elliot with her wealthy ex-fiance Frederick Wentworth. The two must choose between either putting the past behind them or listening to their hearts.",
-        "poster_path": "/10hycdhFLq3M3y0ONxIMSiY8Mrs.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 2.6252,
-        "release_date": "1995-05-01",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.187,
-        "vote_count": 147
-      }
-    },
-    "18804": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/30TFieICaZPeAggwGF9S5GQeoFa.jpg",
-        "id": 18804,
-        "title": "Head in the Clouds",
-        "original_title": "Head in the Clouds",
-        "overview": "Gilda Bessé shares her Paris apartment with an Irish schoolteacher, Guy Malyon, and Mia, a refugee from Spain. As the world drifts toward war, Gilda defiantly pursues her hedonistic lifestyle and her burgeoning career as a photographer. But Guy and Mia feel impelled to join the fight against fascism, and the three friends are separated.",
-        "poster_path": "/7hife90EykgFaJ6KPY1DX8y7DVD.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749,
-          10752
-        ],
-        "popularity": 1.6049,
-        "release_date": "2004-04-29",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.9,
-        "vote_count": 228
-      }
-    },
-    "19621": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/ylrd1QeNvaRXSmXwDLqhaGJ6S9K.jpg",
-        "id": 19621,
-        "title": "The Hit",
-        "original_title": "The Hit",
-        "overview": "Ten years after ratting on his old mobster friends in exchange for personal immunity, two hit men drive a hardened criminal to Paris for his execution. However, while on the way, whatever can go wrong, does go wrong.",
-        "poster_path": "/hKNIz9iids9uPyEpmJjLFM96KXI.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          53,
-          80
-        ],
-        "popularity": 1.3389,
-        "release_date": "1984-09-07",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.456,
-        "vote_count": 237
-      }
-    },
-    "19913": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/1M2i4Mxd03elGOTmEkIvqrHfmyS.jpg",
-        "id": 19913,
-        "title": "(500) Days of Summer",
-        "original_title": "(500) Days of Summer",
-        "overview": "Tom, greeting-card writer and hopeless romantic, is caught completely off-guard when his girlfriend, Summer, suddenly dumps him. He reflects on their 500 days together to try to figure out where their love affair went sour, and in doing so, Tom rediscovers his true passions in life.",
-        "poster_path": "/qXAuQ9hF30sQRsXf40OfRVl0MJZ.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          18,
-          10749
-        ],
-        "popularity": 9.4402,
-        "release_date": "2009-07-17",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.302,
-        "vote_count": 11081
-      }
-    },
-    "22309": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/n1FpfsKJsOzupFmAtXfJAkiJANF.jpg",
-        "id": 22309,
-        "title": "The Fighting Temptations",
-        "original_title": "The Fighting Temptations",
-        "overview": "Darrin Hill, a slick-talking but down-on- his-luck NYC advertising exec, returns to his hometown in Georgia to claim the inheritance his aunt left him. But before Darrin can collect the money, he must fulfill his aunt's final wish -- to create a local choir.",
-        "poster_path": "/1Dd8TBA6G0n1x2N8KpJvIefy2sB.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          10402,
-          10749
-        ],
-        "popularity": 3.2592,
-        "release_date": "2003-09-19",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.8,
-        "vote_count": 136
-      }
-    },
-    "24662": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/lKdpaG0G9kXU1wXcZm21FLiyTTQ.jpg",
-        "id": 24662,
-        "title": "Cats Don't Dance",
-        "original_title": "Cats Don't Dance",
-        "overview": "An ambitious singing and dancing cat in 1939 Hollywood overcomes several obstacles to fulfill his dream of becoming a movie star.",
-        "poster_path": "/6CrgfB0dNUsanaMWHTv0Y6AFeNd.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          16,
-          35,
-          10751,
-          10402
-        ],
-        "popularity": 1.789,
-        "release_date": "1997-03-26",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.201,
-        "vote_count": 201
-      }
-    },
-    "25598": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/wRq5LjJYRbtDb2k7bEtDvFezCeI.jpg",
-        "id": 25598,
-        "title": "The Indian Runner",
-        "original_title": "The Indian Runner",
-        "overview": "Two brothers cannot overcome their opposite perceptions of life. One brother sees and feels bad in everyone and everything, subsequently he is violent, antisocial and unable to appreciate or enjoy the good things which his brother desperately tries to point out to him.",
-        "poster_path": "/1NmjsvXcqe4yyGKfOwLDcxl4HLY.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18
-        ],
-        "popularity": 1.0617,
-        "release_date": "1991-09-20",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.571,
-        "vote_count": 156
-      }
-    },
-    "27397": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/dBpBqk8I2pY7A3HYvHXylQUY8Zo.jpg",
-        "id": 27397,
-        "title": "Crossing Delancey",
-        "original_title": "Crossing Delancey",
-        "overview": "Thirty-something Isabelle spends her time going from her tiny, solitary West Side apartment to that of her grandmother on the Lower East Side. While her grandmother plots to find her a romantic match, Isabelle is courted by a married, worldly author, Anton, yet can't seem to shake the down-to-earth appeal of Sam, a pickle vendor.",
-        "poster_path": "/62GF6vgxIvEpSPrH0WXHtCHm3zB.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          10749
-        ],
-        "popularity": 0.9006,
-        "release_date": "1988-08-17",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.9,
-        "vote_count": 62
-      }
-    },
-    "27834": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/uoGTKAi4qTk4lfOlbSkVKZA72lG.jpg",
-        "id": 27834,
-        "title": "CQ",
-        "original_title": "CQ",
-        "overview": "A young filmmaker in 1960s Paris juggles directing a cheesy sci-fi debacle, directing his own personal art film, coping with his crumbling relationship with his girlfriend, and a new-found infatuation with the sci-fi film's starlet.",
-        "poster_path": "/aFAPOT77Jh7lNWYtojC6nxi4CpJ.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          18
-        ],
-        "popularity": 2.3628,
-        "release_date": "2001-05-12",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.905,
-        "vote_count": 74
-      }
-    },
-    "31507": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/aE9zfMnG4kGBf4SEyUZ5ehPsb6K.jpg",
-        "id": 31507,
-        "title": "Dodsworth",
-        "original_title": "Dodsworth",
-        "overview": "A retired auto manufacturer and his wife take a long-planned European vacation only to find that they want very different things from life.",
-        "poster_path": "/qpd9P54mLYvzdC6rBz56is8aeDB.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 0.9564,
-        "release_date": "1936-09-23",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.122,
-        "vote_count": 148
-      }
-    },
-    "32489": {
-      "count": 2,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/ufekY2p0zR41eAeKDrqpmylDa6K.jpg",
-        "id": 32489,
-        "title": "Thoroughly Modern Millie",
-        "original_title": "Thoroughly Modern Millie",
-        "overview": "Millie Dillmount, a fearless young lady fresh from Salina, Kansas, determined to experience Life, sets out to see the world in the rip-roaring Twenties. With high spirits and wearing one of those new high hemlines, she arrives in New York to test the \"modern\" ideas she had been reading about back in Kansas: \"I've taken the girl out of Kansas. Now I have to take Kansas out of the girl!\"",
-        "poster_path": "/ce8rBGFR0naGsp6mKy9CNKn9iSa.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          10402,
-          10749
-        ],
-        "popularity": 1.057,
-        "release_date": "1967-03-22",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.864,
-        "vote_count": 99
-      }
-    },
-    "34583": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/c0W5mAgFMBMhb1MIuFlUh04zQxO.jpg",
-        "id": 34583,
-        "title": "The Final",
-        "original_title": "The Final",
-        "overview": "A group of high school outcasts get revenge on the students that torment them.",
-        "poster_path": "/ff7UI8q51sOArKafaaAOQnnfpne.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          27
-        ],
-        "popularity": 1.3574,
-        "release_date": "2010-01-28",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.015,
-        "vote_count": 304
-      }
-    },
-    "36586": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/86b0NGY1i0bt3ckhkcHxiCSMxk1.jpg",
-        "id": 36586,
-        "title": "Blade II",
-        "original_title": "Blade II",
-        "overview": "Blade forms an uneasy alliance with the vampire council in order to combat the Reapers, who are feeding on vampires.",
-        "poster_path": "/yDHwo3eWcMiy5LnnEnlGV9iLu9k.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          14,
-          27,
-          28,
-          53
-        ],
-        "popularity": 8.6458,
-        "release_date": "2002-03-22",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.568,
-        "vote_count": 5242
-      }
-    },
-    "36648": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/63eAFgJtN6ZTyFFzlAOoZLhlYqc.jpg",
-        "id": 36648,
-        "title": "Blade: Trinity",
-        "original_title": "Blade: Trinity",
-        "overview": "For years, Blade has fought against the vampires in the cover of the night. But now, after falling into the crosshairs of the FBI, he is forced out into the daylight, where he is driven to join forces with a clan of human vampire hunters he never knew existed—The Nightstalkers. Together with Abigail and Hannibal, two deftly trained Nightstalkers, Blade follows a trail of blood to the ancient creature that is also hunting him—the original vampire, Dracula.",
-        "poster_path": "/6f7iXvPOnf83MaLB1JmPzUor1rr.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          27,
-          878
-        ],
-        "popularity": 7.1356,
-        "release_date": "2004-12-08",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.864,
-        "vote_count": 4335
-      }
-    },
-    "37799": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/1PXwh3nJzgRkkYnqfWInJNypeL4.jpg",
-        "id": 37799,
-        "title": "The Social Network",
-        "original_title": "The Social Network",
-        "overview": "In 2003, Harvard undergrad and computer programmer Mark Zuckerberg begins work on a new concept that eventually turns into the global social network known as Facebook. Six years later, Mark is one of the youngest billionaires ever, but his unprecedented success leads to both personal and legal complications when he ends up on the receiving end of two lawsuits, one involving his former friend.",
-        "poster_path": "/n0ybibhJtQ5icDqTp8eRytcIHJx.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18
-        ],
-        "popularity": 10.5695,
-        "release_date": "2010-10-01",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.374,
-        "vote_count": 13220
-      }
-    },
-    "41214": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/1EvJFAFyMHe5dhDdtTNgyIjutmx.jpg",
-        "id": 41214,
-        "title": "Knock on Any Door",
-        "original_title": "Knock on Any Door",
-        "overview": "An attorney defends a hoodlum of murder, using the oppressiveness of the slums to appeal to the court.",
-        "poster_path": "/aig0a88U0gHQw1dfnqqbwo5bjZv.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          80
-        ],
-        "popularity": 0.9395,
-        "release_date": "1949-02-22",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.215,
-        "vote_count": 72
-      }
-    },
-    "41479": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/sUx0SuDAVYhx2cJr0qqYRsnBNNH.jpg",
-        "id": 41479,
-        "title": "The Joneses",
-        "original_title": "The Joneses",
-        "overview": "A seemingly perfect family moves into a suburban neighborhood, but when it comes to the truth as to why they're living there, they don't exactly come clean with their neighbors.",
-        "poster_path": "/5YINGouZK9pmPdMPAHv158eQf3o.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          18
-        ],
-        "popularity": 1.8085,
-        "release_date": "2010-04-16",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.199,
-        "vote_count": 643
-      }
-    },
-    "41966": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/yDuhznnNmR4Pehf9QubGnLkEBNC.jpg",
-        "id": 41966,
-        "title": "Pin : A Plastic Nightmare",
-        "original_title": "Pin : A Plastic Nightmare",
-        "overview": "Pin, a plastic medical dummy, has been the fixation of Leon since youth. Now grown up and orphaned in an accident, Leon brings Pin home to live with him and his sister Ursula, much to her reluctance. Soon, however, Leon's fixation on Pin spirals out of control, and Ursula must face the devastating consequences.",
-        "poster_path": "/ouUfJtdHPkRXFJ0zDLPvgbPHPjd.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          27,
-          53
-        ],
-        "popularity": 2.6491,
-        "release_date": "1988-11-25",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.8,
-        "vote_count": 164
-      }
-    },
-    "42297": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/56H7AtJ5GK4UxFoHuw9QDwI7wzD.jpg",
-        "id": 42297,
-        "title": "Burlesque",
-        "original_title": "Burlesque",
-        "overview": "Ali leaves behind a troubled life and follows her dreams to Los Angeles, where she lands a job as a cocktail waitress at the Burlesque Lounge, a once-majestic theater that houses an inspired musical revue. Vowing to perform there, she makes the leap from bar to stage, helping restore the club's former glory.",
-        "poster_path": "/3U9zBIibERQZqYKM3N1a4MYgBsN.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 4.3145,
-        "release_date": "2010-11-23",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.215,
-        "vote_count": 2382
-      }
-    },
-    "43386": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/sI0ISjxKLbRZwaY5mjUI8SdJeME.jpg",
-        "id": 43386,
-        "title": "Cyrano de Bergerac",
-        "original_title": "Cyrano de Bergerac",
-        "overview": "France, 1640. Cyrano, the charismatic swordsman-poet with the absurd nose, hopelessly loves the beauteous Roxane; she, in turn, confesses to Cyrano her love for the handsome but tongue-tied Christian. The chivalrous Cyrano sets up with Christian an innocent deception, with tragic results.",
-        "poster_path": "/l4JFOXslwb90opz8xozfIhPke8z.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10749,
-          18,
-          12
-        ],
-        "popularity": 0.9031,
-        "release_date": "1950-11-16",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.875,
-        "vote_count": 76
-      }
-    },
-    "45225": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/tozIozRtjbpDcYoBkT3dyZpayXf.jpg",
-        "id": 45225,
-        "title": "The Big Picture",
-        "original_title": "The Big Picture",
-        "overview": "Hollywood beckons for recent film school grad Nick Chapman, who is out to capitalize on the momentum from his national award-winning student film. Studio executive Allen Habel seduces Nick with a dream deal to make his first feature, but once production gets rolling, corporate reality begins to intervene: Nick is unable to control a series of compromises to his high-minded vision, and it's all he can do to maintain his integrity in the midst of filmmaking chaos.",
-        "poster_path": "/olQw61BotSq74LgpwQTn4qPYAk1.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          10749,
-          18
-        ],
-        "popularity": 1.1626,
-        "release_date": "1989-09-15",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.896,
-        "vote_count": 106
-      }
-    },
-    "45609": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/sO2R3spdsK7GcAa8qyUnOGw7Ns4.jpg",
-        "id": 45609,
-        "title": "The Wings of the Dove",
-        "original_title": "The Wings of the Dove",
-        "overview": "Kate is secretly betrothed to a struggling journalist, Merton Densher. But she knows her Aunt Maude will never approve of the match, since Kate's deceased mother has lost all her money in a marriage to a degenerate opium addict. When Kate meets a terminally ill American heiress named Millie traveling through Europe, she comes up with a conniving plan to have both love and wealth.",
-        "poster_path": "/eb1ZnIEC8LMmMgwD2fIAmQOkcd.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 1.2336,
-        "release_date": "1997-09-04",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.636,
-        "vote_count": 125
-      }
-    },
-    "47525": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/vzeyPbl4rWMVgdkAj7thmDuQZmE.jpg",
-        "id": 47525,
-        "title": "The Magic of Ordinary Days",
-        "original_title": "The Magic of Ordinary Days",
-        "overview": "Pregnant out of wedlock, an educated young woman is pressured by her father into an arranged marriage with a lonely farmer in this drama set during WWII.",
-        "poster_path": "/4UAR1KJNyvBdhTXmmlxqROUCxi2.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749,
-          10770
-        ],
-        "popularity": 4.0715,
-        "release_date": "2005-01-30",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.313,
-        "vote_count": 99
-      }
-    },
-    "52338": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/bIYdARPeH7VkZTfqkdjrmenKCGZ.jpg",
-        "id": 52338,
-        "title": "Waiting for Forever",
-        "original_title": "Waiting for Forever",
-        "overview": "A Hollywood-set romantic tale of a guy who is content to live his life without a job yet with the love of his life, a young actress.",
-        "poster_path": "/2NQpYb0AnMD0PY9UY90u9ifAFsL.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 0.7362,
-        "release_date": "2010-02-10",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.94,
-        "vote_count": 281
-      }
-    },
-    "74308": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/iJwtR94Yq9U83ET0TzirsGWTewH.jpg",
-        "id": 74308,
-        "title": "Detachment",
-        "original_title": "Detachment",
-        "overview": "A chronicle of three weeks in the lives of several high school teachers, administrators and students through the eyes of substitute teacher, Henry Barthes. Henry roams from school to school, imparting modes of knowledge, but never staying long enough to form any semblance of sentient attachment.",
-        "poster_path": "/bC5H2dabnHrQJD1KmQUSUUeuCXU.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18
-        ],
-        "popularity": 5.8876,
-        "release_date": "2011-04-24",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.63,
-        "vote_count": 2020
-      }
-    },
-    "87492": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/tT8vexYdyHG0nHyXQkhzt8tbFkt.jpg",
-        "id": 87492,
-        "title": "Foxcatcher",
-        "original_title": "Foxcatcher",
-        "overview": "The greatest Olympic Wrestling Champion brother team joins Team Foxcatcher led by multimillionaire sponsor John E. du Pont as they train for the 1988 games in Seoul - a union that leads to unlikely circumstances.",
-        "poster_path": "/w6Sl079QtUcQ9dVQ2RP6aN9NBXx.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          53
-        ],
-        "popularity": 2.2345,
-        "release_date": "2014-11-14",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.651,
-        "vote_count": 2489
-      }
-    },
-    "92283": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/cRqXfDNRMjLL8X18eL2quXTqU3n.jpg",
-        "id": 92283,
-        "title": "I Never Sang for My Father",
-        "original_title": "I Never Sang for My Father",
-        "overview": "A man living in the towering shadow of his aging father finds it difficult to start a new chapter in his life by marrying his girlfriend and moving to California.",
-        "poster_path": "/o494qtKJgd5IU21sMjdc5tTd7fQ.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18
-        ],
-        "popularity": 0.6285,
-        "release_date": "1970-10-18",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.679,
-        "vote_count": 42
-      }
-    },
-    "101669": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/4xrt2SCSXmKiAuzCuYQVGkssvWS.jpg",
-        "id": 101669,
-        "title": "Mother's Day",
-        "original_title": "Mother's Day",
-        "overview": "Crazed members of a sadistic family return to their childhood home to terrorize the new owners.",
-        "poster_path": "/wjKmtce2WFoOyoiYGVx0nUSzGxT.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          80,
-          27,
-          53
-        ],
-        "popularity": 1.1784,
-        "release_date": "2010-09-23",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.481,
-        "vote_count": 464
-      }
-    },
-    "127585": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/3czpqXzFy5UcNuD1AubecRLWkwD.jpg",
-        "id": 127585,
-        "title": "X-Men: Days of Future Past",
-        "original_title": "X-Men: Days of Future Past",
-        "overview": "The ultimate X-Men ensemble fights a war for the survival of the species across two time periods as they join forces with their younger selves in an epic battle that must change the past – to save our future.",
-        "poster_path": "/tYfijzolzgoMOtegh1Y7j2Enorg.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          12,
-          878
-        ],
-        "popularity": 12.1633,
-        "release_date": "2014-05-15",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.532,
-        "vote_count": 16322
-      }
-    },
-    "138843": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/ecKQlAEG95k62SMGhvX83oEqANK.jpg",
-        "id": 138843,
-        "title": "The Conjuring",
-        "original_title": "The Conjuring",
-        "overview": "Paranormal investigators Ed and Lorraine Warren work to help a family terrorized by a dark presence in their farmhouse. Forced to confront a powerful entity, the Warrens find themselves caught in the most terrifying case of their lives.",
-        "poster_path": "/wVYREutTvI2tmxr6ujrHT704wGF.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          27,
-          53
-        ],
-        "popularity": 19.8027,
-        "release_date": "2013-07-18",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.54,
-        "vote_count": 12783
-      }
-    },
-    "152601": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/sPPsR9f4K0movWVQ99u4uMqFzEL.jpg",
-        "id": 152601,
-        "title": "Her",
-        "original_title": "Her",
-        "overview": "In the not so distant future, Theodore, a lonely writer, purchases a newly developed operating system designed to meet the user's every need. To Theodore's surprise, a romantic relationship develops between him and his operating system. This unconventional love story blends science fiction and romance in a sweet tale that explores the nature of love and the ways that technology isolates and connects us all.",
-        "poster_path": "/eCOtqtfvn7mxGl6nfmq4b1exJRc.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10749,
-          878,
-          18
-        ],
-        "popularity": 9.7094,
-        "release_date": "2013-12-18",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.838,
-        "vote_count": 15359
-      }
-    },
-    "164457": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/joXz5iPvhDvrHUejlviswMCZaEz.jpg",
-        "id": 164457,
-        "title": "Out of the Furnace",
-        "original_title": "Out of the Furnace",
-        "overview": "Two brothers live in the economically-depressed Rust Belt, when a cruel twist of fate lands one in prison. His brother is then lured into one of the most violent crime rings in the Northeast.",
-        "poster_path": "/cOuQQ4eRpSBxb0G9OXzWE1pHPeq.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          18,
-          80
-        ],
-        "popularity": 3.1157,
-        "release_date": "2013-11-12",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.566,
-        "vote_count": 2140
-      }
-    },
-    "176124": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/gVnjy4A3E5nJVKDhdw46VB5Pkz2.jpg",
-        "id": 176124,
-        "title": "Home Run",
-        "original_title": "Home Run",
-        "overview": "A pro ball player with a substance abuse problem is forced into rehab in his hometown, finding new hope when he gets honest about his checkered past, and takes on coaching duties for a misfit Little League team",
-        "poster_path": "/687pD1t23ptW7mxhA34ASLEaFrE.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18
-        ],
-        "popularity": 1.0325,
-        "release_date": "2013-04-19",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.198,
-        "vote_count": 63
-      }
-    },
-    "187017": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/kdyYOwpKvvD2fSbwfnMM2YPAzfq.jpg",
-        "id": 187017,
-        "title": "22 Jump Street",
-        "original_title": "22 Jump Street",
-        "overview": "After making their way through high school (twice), big changes are in store for officers Schmidt and Jenko when they go deep undercover at a local college. But when Jenko meets a kindred spirit on the football team, and Schmidt infiltrates the bohemian art major scene, they begin to question their partnership. Now they don't have to just crack the case - they have to figure out if they can have a mature relationship. If these two overgrown adolescents can grow from freshmen into real men, college might be the best thing that ever happened to them.",
-        "poster_path": "/850chzYHYbT3IISl6Q7dbBuFP2B.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          80,
-          35,
-          28
-        ],
-        "popularity": 5.8936,
-        "release_date": "2014-06-05",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.828,
-        "vote_count": 8560
-      }
-    },
-    "188927": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/sUJrnMbL2xLMjMHk4VdReNrL7BK.jpg",
-        "id": 188927,
-        "title": "Star Trek Beyond",
-        "original_title": "Star Trek Beyond",
-        "overview": "The USS Enterprise crew explores the furthest reaches of uncharted space, where they encounter a mysterious new enemy who puts them and everything the Federation stands for to the test.",
-        "poster_path": "/cnQp8GmOWahIgQaH60Kwez3TNzw.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          12,
-          878
-        ],
-        "popularity": 6.62,
-        "release_date": "2016-07-07",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.8,
-        "vote_count": 7133
-      }
-    },
-    "205587": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/sPantp0oQ9idos7Jdwko2r6ZOIa.jpg",
-        "id": 205587,
-        "title": "The Judge",
-        "original_title": "The Judge",
-        "overview": "A successful lawyer returns to his hometown for his mother's funeral only to discover that his estranged father, the town's judge, is suspected of murder.",
-        "poster_path": "/3K93GWotLXe4FqpErri0xkpLaD5.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18
-        ],
-        "popularity": 8.1142,
-        "release_date": "2014-10-08",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.332,
-        "vote_count": 4451
-      }
-    },
-    "206192": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/xEpiDj1WZcMAFMGgjmrGIfAz74K.jpg",
-        "id": 206192,
-        "title": "Perfect Sisters",
-        "original_title": "Perfect Sisters",
-        "overview": "Tired of their mother's alcoholism and a string of her abusive boyfriends, two sisters plot to kill her.",
-        "poster_path": "/c7JoUa6DDoHkR5ubRdCgnpwGUE5.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          18,
-          80
-        ],
-        "popularity": 1.3956,
-        "release_date": "2014-04-08",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.837,
-        "vote_count": 257
-      }
-    },
-    "207933": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/988AG01BZZe62P33jemkFIacxF9.jpg",
-        "id": 207933,
-        "title": "Stonehearst Asylum",
-        "original_title": "Stonehearst Asylum",
-        "overview": "An Oxford Medical School graduate takes a position at a mental institution and soon becomes obsessed with a female mental patient, but he has no idea of a recent and horrifying staffing change.",
-        "poster_path": "/fZxGCCQ0NAtraevqULJ84wSSjo0.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          9648,
-          27
-        ],
-        "popularity": 3.9699,
-        "release_date": "2014-10-23",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.849,
-        "vote_count": 1599
-      }
-    },
-    "239566": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/j3qoYRsQueTCvFhOVakVNhqmxRW.jpg",
-        "id": 239566,
-        "title": "Get On Up",
-        "original_title": "Get On Up",
-        "overview": "A chronicle of James Brown's rise from extreme poverty to become one of the most influential musicians in history.",
-        "poster_path": "/dVbGeU5agxFGcJnL5hk4uO8W7i2.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10402,
-          36
-        ],
-        "popularity": 2.9992,
-        "release_date": "2014-08-01",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.771,
-        "vote_count": 571
-      }
-    },
-    "239571": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/ydRoUWyhAMv1FstnWlo5EiZWEbc.jpg",
-        "id": 239571,
-        "title": "The Best of Me",
-        "original_title": "The Best of Me",
-        "overview": "A pair of former high school sweethearts reunite after many years when they return to visit their small hometown.",
-        "poster_path": "/fUSemUPEJ9wKar5uYzMyIlLmWjS.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 3.3059,
-        "release_date": "2014-10-15",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.463,
-        "vote_count": 2709
-      }
-    },
-    "244536": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/vBD85WZa6CtqVjSFYlsvwn5ZKIm.jpg",
-        "id": 244536,
-        "title": "Hellion",
-        "original_title": "Hellion",
-        "overview": "When motocross and heavy metal obsessed, 13-year-old Jacob's delinquent behavior forces CPS to place his little brother Wes with his aunt, Jacob and his emotionally absent father must finally take responsibility for their actions and each other in order to bring Wes home.",
-        "poster_path": "/7jfSzQumy9o28Scbfs3ENf32NRt.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          18
-        ],
-        "popularity": 1.0251,
-        "release_date": "2014-06-13",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.885,
-        "vote_count": 131
-      }
-    },
-    "271674": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/j82SfPOqas5rvHbAHAPq7OgaSir.jpg",
-        "id": 271674,
-        "title": "Suite Française",
-        "original_title": "Suite Française",
-        "overview": "France, 1940. In the first days of occupation, beautiful Lucile Angellier is trapped in a stifled existence with her controlling mother-in-law as they both await news of her husband: a prisoner of war. Parisian refugees start to pour into their small town, soon followed by a regiment of German soldiers who take up residence in the villagers' own homes. Lucile initially tries to ignore Bruno von Falk, the handsome and refined German officer staying with them. But soon, a powerful love draws them together and leads them into the tragedy of war.",
-        "poster_path": "/mPgijY9f79FfD7K8MmzsynXpq0R.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749,
-          10752
-        ],
-        "popularity": 2.211,
-        "release_date": "2015-03-12",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.2,
-        "vote_count": 1151
-      }
-    },
-    "330483": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/zHkQEQzoLAJwlMif4QJP1jjbsky.jpg",
-        "id": 330483,
-        "title": "The Choice",
-        "original_title": "The Choice",
-        "overview": "Travis and Gabby first meet as neighbors in a small coastal town and wind up in a relationship that is tested by life's most defining events.",
-        "poster_path": "/6MF3cdAasnF17SG9bmeamQ066iJ.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 3.7594,
-        "release_date": "2016-02-04",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.2,
-        "vote_count": 1968
-      }
-    },
-    "333385": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/ugnGe88pG04SViHpbXbqenzKkOt.jpg",
-        "id": 333385,
-        "title": "Mr. Right",
-        "original_title": "Mr. Right",
-        "overview": "A girl falls for the \"perfect\" guy, who happens to have a very fatal flaw: he's a hitman on the run from the crime cartels who employ him.",
-        "poster_path": "/aSx5YUCLcSUAR4nt93aeIpZYHF6.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          10749,
-          80
-        ],
-        "popularity": 3.585,
-        "release_date": "2016-02-29",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.446,
-        "vote_count": 1467
-      }
-    },
-    "334541": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/fjk4eE8Ypke4YLv5A3ArDH4GzYH.jpg",
-        "id": 334541,
-        "title": "Manchester by the Sea",
-        "original_title": "Manchester by the Sea",
-        "overview": "After his older brother passes away, Lee Chandler is forced to return home to care for his 16-year-old nephew. There he is compelled to deal with a tragic past that separated him from his family and the community where he was born and raised.",
-        "poster_path": "/o9VXYOuaJxCEKOxbA86xqtwmqYn.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18
-        ],
-        "popularity": 6.3664,
-        "release_date": "2016-11-17",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.554,
-        "vote_count": 6431
-      }
-    },
-    "348631": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/ggOz8X6UnMkfxQb9koKpWb4eSnc.jpg",
-        "id": 348631,
-        "title": "Gourmet Detective: A Healthy Place to Die",
-        "original_title": "Gourmet Detective: A Healthy Place to Die",
-        "overview": "When Henry is invited as a guest speaker at a luxury resort spa, he quickly finds himself at the center of another murder. With Maggie at his side, our favorite duo must not only find the killer but be careful they don't become his latest victim.",
-        "poster_path": "/6tNpD8NCMojed9X9bYyi4IrXpaI.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10770,
-          9648,
-          80
-        ],
-        "popularity": 1.955,
-        "release_date": "2015-08-02",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.676,
-        "vote_count": 51
-      }
-    },
-    "353577": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/gz1Lr0WcKJ1eg7mfN0AfAPXbI7h.jpg",
-        "id": 353577,
-        "title": "Love at First Sight",
-        "original_title": "Love at First Sight",
-        "overview": "Hadley and Oliver begin falling in love on a flight from New York to London, but when they lose each other at customs, can they defy all odds to reunite?",
-        "poster_path": "/vCMGlarDrcmhclBmnYoH7JUCDuA.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10749,
-          18
-        ],
-        "popularity": 2.956,
-        "release_date": "2023-09-15",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.235,
-        "vote_count": 701
-      }
-    },
-    "371741": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/r5GXidBpKAqpzMzFTfBIxIqXlAO.jpg",
-        "id": 371741,
-        "title": "Ali and Nino",
-        "original_title": "Ali and Nino",
-        "overview": "Muslim prince Ali and Georgian aristocrat Nino have grown up in the Russian province of Azerbaijan. Their tragic love story sees the outbreak of the First World War and the world’s struggle for Baku’s oil. Ultimately they must choose to fight for their country’s independence or for each other.",
-        "poster_path": "/k678ohrP2DcfgElWZl2mxdO3vEd.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 1.1252,
-        "release_date": "2016-01-27",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.5,
-        "vote_count": 84
-      }
-    },
-    "392044": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/IQyEvPTYvrzsa7qstRj6VLQupr.jpg",
-        "id": 392044,
-        "title": "Murder on the Orient Express",
-        "original_title": "Murder on the Orient Express",
-        "overview": "Genius Belgian detective Hercule Poirot investigates the murder of an American tycoon aboard the Orient Express train.",
-        "poster_path": "/7GtdJU6iAg6fjQu3E3zta3bIAQh.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          9648,
-          18,
-          80
-        ],
-        "popularity": 6.261,
-        "release_date": "2017-11-03",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.707,
-        "vote_count": 10578
-      }
-    },
-    "412656": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/ovggmAOu1IbPGTQE8lg4lBasNC7.jpg",
-        "id": 412656,
-        "title": "Chaos Walking",
-        "original_title": "Chaos Walking",
-        "overview": "Two unlikely companions embark on a perilous adventure through the badlands of an unexplored planet as they try to escape a dangerous and disorienting reality, where all inner thoughts are seen and heard by everyone.",
-        "poster_path": "/xAYGdGBGptNkisXRpmhZSry6SPF.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          14,
-          878,
-          12
-        ],
-        "popularity": 4.1224,
-        "release_date": "2021-02-24",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.547,
-        "vote_count": 2604
-      }
-    },
-    "412988": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/nMEGEPQIyS30KIJpZETGpluFquJ.jpg",
-        "id": 412988,
-        "title": "The Happytime Murders",
-        "original_title": "The Happytime Murders",
-        "overview": "In a world where humans coexist with puppets—who are seen as lesser citizens—cast members of a beloved 1990s children's television series begin getting murdered one by one. Puppet Phil Philips, an ex-LAPD detective-turned-private eye, takes on the case at the request of his old boss in order to assist his former partner, Detective Connie Edwards.",
-        "poster_path": "/rWxkur51srfVnMn2QOFjE7mbq6h.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          80,
-          35
-        ],
-        "popularity": 2.1503,
-        "release_date": "2018-08-22",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.809,
-        "vote_count": 1089
-      }
-    },
-    "416417": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/fBwp5YvMxbH84kN21DN33E7cyYg.jpg",
-        "id": 416417,
-        "title": "Miss Marple: They Do It with Mirrors",
-        "original_title": "Miss Marple: They Do It with Mirrors",
-        "overview": "At the insistence of Ruth Van Rydock, an old schoolfriend who is convinced that there is something wrong, Miss Marple agrees to visit 'Stonygates', the country house of Ruth's sister.",
-        "poster_path": "/dVsTv0I24Z3QHTCW6aXv9QzIyT0.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          9648,
-          18,
-          80,
-          10770
-        ],
-        "popularity": 1.636,
-        "release_date": "1991-12-29",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.907,
-        "vote_count": 43
-      }
-    },
-    "426814": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/rwr038BaQBqRQbnP8yps4hXp5Dp.jpg",
-        "id": 426814,
-        "title": "The Domestics",
-        "original_title": "The Domestics",
-        "overview": "A young husband and wife must fight to return home in a post-apocalyptic mid-western landscape ravaged by gangs.",
-        "poster_path": "/j64I3u1wwgPct3stvvKU2ikl14w.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          27,
-          53
-        ],
-        "popularity": 1.9777,
-        "release_date": "2018-06-28",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.129,
-        "vote_count": 515
-      }
-    },
-    "430231": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/nvCMi8ZhH1Z8i9ZFHYrXBl8uBw0.jpg",
-        "id": 430231,
-        "title": "The Endless",
-        "original_title": "The Endless",
-        "overview": "Two brothers return to the cult they fled from years ago to discover that the group's beliefs may be more sane than they once thought.",
-        "poster_path": "/uVHPBTLb6Sj1Eso9HzyBAOMRheM.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          878,
-          27,
-          53
-        ],
-        "popularity": 2.7562,
-        "release_date": "2017-11-05",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.326,
-        "vote_count": 1302
-      }
-    },
-    "435107": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/pfeIlAUwLZANIt5GSJwUT6SYN6Y.jpg",
-        "id": 435107,
-        "title": "A Royal Winter",
-        "original_title": "A Royal Winter",
-        "overview": "While on a last-minute European holiday, a young woman finds herself in the middle of a real-life fairy tale when a chance meeting with a handsome local leads to something more. However, things get complicated when she learns that the \"local\" is actually a prince who is about to be crowned King, and whose mother is dead-set against her royal son's romance with the tourist.",
-        "poster_path": "/lxeJQe4lcW8AzDrRjzixOrlmihv.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10770,
-          10749
-        ],
-        "popularity": 2.2381,
-        "release_date": "2017-01-14",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.1,
-        "vote_count": 193
-      }
-    },
-    "438631": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/zRKQW58MBEY078AxkHxEJzUskCl.jpg",
-        "id": 438631,
-        "title": "Dune",
-        "original_title": "Dune",
-        "overview": "Paul Atreides, a brilliant and gifted young man born into a great destiny beyond his understanding, must travel to the most dangerous planet in the universe to ensure the future of his family and his people. As malevolent forces explode into conflict over the planet's exclusive supply of the most precious resource in existence-a commodity capable of unlocking humanity's greatest potential-only those who can conquer their fear will survive.",
-        "poster_path": "/gDzOcq0pfeCeqMBwKIJlSmQpjkZ.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          878,
-          12
-        ],
-        "popularity": 27.132,
-        "release_date": "2021-09-15",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.78,
-        "vote_count": 15010
-      }
-    },
-    "447365": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/5YZbUmjbMa3ClvSW1Wj3D6XGolb.jpg",
-        "id": 447365,
-        "title": "Guardians of the Galaxy Vol. 3",
-        "original_title": "Guardians of the Galaxy Vol. 3",
-        "overview": "Peter Quill, still reeling from the loss of Gamora, must rally his team around him to defend the universe along with protecting one of their own. A mission that, if not completed successfully, could quite possibly lead to the end of the Guardians as we know them.",
-        "poster_path": "/r2J02Z2OpNTctfOSN1Ydgii51I3.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          878,
-          12,
-          28
-        ],
-        "popularity": 17.2343,
-        "release_date": "2023-05-03",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.9,
-        "vote_count": 8414
-      }
-    },
-    "454652": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/t0900ZYbpbA50ryO9QAofPzXyIF.jpg",
-        "id": 454652,
-        "title": "Colette",
-        "original_title": "Colette",
-        "overview": "After marrying a successful Parisian writer known commonly as Willy, Sidonie-Gabrielle Colette is transplanted from her childhood home in rural France to the intellectual and artistic splendor of Paris. Soon after, Willy convinces Colette to ghostwrite for him. She pens a semi-autobiographical novel about a witty and brazen country girl named Claudine, sparking a bestseller and a cultural sensation. After its success, Colette and Willy become the talk of Paris and their adventures inspire additional Claudine novels.",
-        "poster_path": "/5fvcs8x7k16wGdet16qkx1cKBPM.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          36
-        ],
-        "popularity": 3.1029,
-        "release_date": "2018-09-21",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.871,
-        "vote_count": 953
-      }
-    },
-    "463158": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/givyOg8mdy0aFCdENMn8FIVuS4o.jpg",
-        "id": 463158,
-        "title": "My Dinner with Hervé",
-        "original_title": "My Dinner with Hervé",
-        "overview": "An unlikely friendship evolves over one wild night in LA between a struggling journalist and actor Hervé Villechaize, the world's most famous gun-toting dwarf, resulting in life-changing consequences for both.",
-        "poster_path": "/sb7Pr5mS4l37gWOWcwVaFNclhZh.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10770
-        ],
-        "popularity": 1.0257,
-        "release_date": "2018-10-20",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.281,
-        "vote_count": 137
-      }
-    },
-    "475557": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/rlay2M5QYvi6igbGcFjq8jxeusY.jpg",
-        "id": 475557,
-        "title": "Joker",
-        "original_title": "Joker",
-        "overview": "During the 1980s, a failed stand-up comedian is driven insane and turns to a life of crime and chaos in Gotham City while becoming an infamous psychopathic crime figure.",
-        "poster_path": "/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          80,
-          53,
-          18
-        ],
-        "popularity": 17.1904,
-        "release_date": "2019-10-01",
-        "softcore": false,
-        "video": false,
-        "vote_average": 8.123,
-        "vote_count": 27831
-      }
-    },
-    "480001": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/cUkpSTVt0iUbIVFDxvUGs747OMW.jpg",
-        "id": 480001,
-        "title": "The Art of Self-Defense",
-        "original_title": "The Art of Self-Defense",
-        "overview": "Casey is attacked at random on the street and enlists in a local dojo led by a charismatic and mysterious Sensei in an effort to learn how to defend himself. What he uncovers is a sinister world of fraternity, violence and hypermasculinity and a woman fighting for her place in it.",
-        "poster_path": "/bTq793Qwl3tCXb94zrDPAwppbsC.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          53,
-          18,
-          9648
-        ],
-        "popularity": 1.883,
-        "release_date": "2019-07-12",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.558,
-        "vote_count": 835
-      }
-    },
-    "481370": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/4rCArads48eoWTDplCqyXkHKuhE.jpg",
-        "id": 481370,
-        "title": "Bigger",
-        "original_title": "Bigger",
-        "overview": "The inspirational tale of the grandfathers of the fitness movement as we now know it, Joe & Ben Weider. Battling anti-Semitism, racism and extreme poverty, the brothers beat all odds to build an empire & inspire future generations.",
-        "poster_path": "/lLXKZJN71I6BjGEIjSdMppv9htO.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          36
-        ],
-        "popularity": 0.9351,
-        "release_date": "2018-10-13",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.9,
-        "vote_count": 81
-      }
-    },
-    "502122": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/jP7GwNF0xtpYptH4VwBSBUH28dX.jpg",
-        "id": 502122,
-        "title": "First Match",
-        "original_title": "First Match",
-        "overview": "Hardened by years in foster care, a teenage girl from Brooklyn’s Brownsville neighborhood decides that wrestling boys is the only way back to her estranged father.",
-        "poster_path": "/zwmtK6A7jwriIY0gh0HUgvI1ETA.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18
-        ],
-        "popularity": 1.1164,
-        "release_date": "2018-03-12",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.436,
-        "vote_count": 148
-      }
-    },
-    "522212": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/wfabrzHzfYTdCj3iSCY7OEQbND0.jpg",
-        "id": 522212,
-        "title": "Just Mercy",
-        "original_title": "Just Mercy",
-        "overview": "The powerful true story of Harvard-educated lawyer Bryan Stevenson, who goes to Alabama to defend the disenfranchised and wrongly condemned — including Walter McMillian, a man sentenced to death despite evidence proving his innocence. Bryan fights tirelessly for Walter with the system stacked against them.",
-        "poster_path": "/2bDZl3PzFLFWe4gaFUQnnaslqT3.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          80,
-          36
-        ],
-        "popularity": 5.1284,
-        "release_date": "2019-12-25",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.85,
-        "vote_count": 2506
-      }
-    },
-    "600583": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/gAsHuCQMN7mv4uFIvM4ACQ09hPr.jpg",
-        "id": 600583,
-        "title": "The Power of the Dog",
-        "original_title": "The Power of the Dog",
-        "overview": "A domineering but charismatic rancher wages a war of intimidation on his brother's new wife and her teen son, until long-hidden secrets come to light.",
-        "poster_path": "/kEy48iCzGnp0ao1cZbNeWR6yIhC.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          37
-        ],
-        "popularity": 3.9681,
-        "release_date": "2021-10-25",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.736,
-        "vote_count": 2971
-      }
-    },
-    "601470": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/rskVKmBb83u7qbaASCxyJyLevkq.jpg",
-        "id": 601470,
-        "title": "The Eyes of Tammy Faye",
-        "original_title": "The Eyes of Tammy Faye",
-        "overview": "From the 1960s to the 1980s, evangelist Jim Baker and his ambitious wife, Tammy Faye, rose from humble beginnings to build an empire based on big-time evangelical Christianity--only for the couple to fall from grace because of some all-too-human sins.",
-        "poster_path": "/yL3IAfOxUH7h1Og9kxG3czxa4XV.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          36
-        ],
-        "popularity": 1.598,
-        "release_date": "2021-09-17",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.443,
-        "vote_count": 687
-      }
-    },
-    "601666": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/pA4J371Gk2F47vyGQOWapcsnOzz.jpg",
-        "id": 601666,
-        "title": "I Care a Lot",
-        "original_title": "I Care a Lot",
-        "overview": "A court-appointed legal guardian defrauds her older clients and traps them under her care. But her latest mark comes with some unexpected baggage.",
-        "poster_path": "/gKnhEsjNefpKnUdAkn7INzIFLSu.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          80,
-          53,
-          18,
-          35
-        ],
-        "popularity": 4.2814,
-        "release_date": "2021-02-19",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.575,
-        "vote_count": 3006
-      }
-    },
-    "638449": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/AmzVV7kqds8BJBXwnQtx5YpqFdU.jpg",
-        "id": 638449,
-        "title": "The Last Letter from Your Lover",
-        "original_title": "The Last Letter from Your Lover",
-        "overview": "A young journalist in London becomes obsessed with a series of letters she discovers that recounts an intense star-crossed love affair from the 1960s.",
-        "poster_path": "/fDKK51YdOfu9pTmSRw7sHUhGFxm.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          10749
-        ],
-        "popularity": 3.0297,
-        "release_date": "2021-07-23",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.334,
-        "vote_count": 670
-      }
-    },
-    "639988": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/1eM6Ey1FzpgJigrxRiSYtntSWq7.jpg",
-        "id": 639988,
-        "title": "No Other Choice",
-        "original_title": "어쩔수가없다",
-        "overview": "After being laid off and humiliated by a ruthless job market, a veteran paper mill manager descends into violence in a desperate bid to reclaim his dignity.",
-        "poster_path": "/vc2S0dvgpsM0XfSiXZDMVkRCSSU.jpg",
-        "media_type": "movie",
-        "original_language": "ko",
-        "genre_ids": [
-          35,
-          80,
-          53
-        ],
-        "popularity": 10.2096,
-        "release_date": "2025-09-24",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.505,
-        "vote_count": 1122
-      }
-    },
-    "677179": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/gOIztYywR291pC4k3IpDq7Vj3Kj.jpg",
-        "id": 677179,
-        "title": "Creed III",
-        "original_title": "Creed III",
-        "overview": "After dominating the boxing world, Adonis Creed has thrived in his career and family life. When a childhood friend and former boxing prodigy, Damian Anderson, resurfaces after serving a long sentence in prison, he is eager to prove that he deserves his shot in the ring. The face-off between former friends is more than just a fight. To settle the score, Adonis must put his future on the line to battle Damian — a fighter with nothing to lose.",
-        "poster_path": "/cvsXj3I9Q2iyyIo95AecSd1tad7.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          28
-        ],
-        "popularity": 6.9125,
-        "release_date": "2023-03-01",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.086,
-        "vote_count": 2896
-      }
-    },
-    "741755": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/85T5fkXk5BLQd0JNDdFjpPlW0j2.jpg",
-        "id": 741755,
-        "title": "Aurora Teagarden Mysteries: Reunited and It Feels So Deadly",
-        "original_title": "Aurora Teagarden Mysteries: Reunited and It Feels So Deadly",
-        "overview": "Aurora's high school reunion turns deadly when a body is found in the hotel pool. Aurora and her Real Murders Club help investigate which classmate was most likely to kill.",
-        "poster_path": "/mc5SHXpgl8D5R6AqMF4SvS46bSA.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          9648,
-          80,
-          10770,
-          18
-        ],
-        "popularity": 0.8322,
-        "release_date": "2020-10-18",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.267,
-        "vote_count": 45
-      }
-    },
-    "746056": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/pBY3XBGT1WplO30yzrhSGBSvbaQ.jpg",
-        "id": 746056,
-        "title": "A Glenbrooke Christmas",
-        "original_title": "A Glenbrooke Christmas",
-        "overview": "As Christmas nears, heiress Jessica Morgan seizes what seems like her last chance to experience a relaxed Christmas and heads off to the small town of Glenbrooke, where she meets a handsome fireman.",
-        "poster_path": "/i2Q7WtmhXlDp8rDwTdmKBxiIMTZ.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10749,
-          10770
-        ],
-        "popularity": 1.4721,
-        "release_date": "2020-12-12",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.547,
-        "vote_count": 43
-      }
-    },
-    "772973": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/u3tYPd0s6uvLvgEqWVUQSM8pe47.jpg",
-        "id": 772973,
-        "title": "The Inhabitant",
-        "original_title": "The Inhabitant",
-        "overview": "Like any other teenage girl, Tara is just surviving high school — yet her father and mother seem strangely distant. Amidst a nearby spree of gruesome ax murders, Tara has sightings of terrifying entities, forcing her to question her own sanity and shocking ancestry.",
-        "poster_path": "/p1hH2FXEUHuY5kzm9bEBxEmdD8D.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          27,
-          9648
-        ],
-        "popularity": 0.9879,
-        "release_date": "2022-10-07",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.93,
-        "vote_count": 129
-      }
-    },
-    "798362": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/c7MRmF3LMiBWokedmdQl3roTUv2.jpg",
-        "id": 798362,
-        "title": "The Marsh King's Daughter",
-        "original_title": "The Marsh King's Daughter",
-        "overview": "Helena, a woman living a seemingly ordinary life, hides a dark secret—her father is the infamous 'Marsh King', the man who kept her and her mother captive in the wilderness for years. After a lifetime of trying to escape her past, Helena is forced to face her demons when her father unexpectedly escapes from prison.",
-        "poster_path": "/bcuEjrwhp5HgEUnFe5lc4xpEqzt.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          53,
-          80,
-          9648
-        ],
-        "popularity": 4.4024,
-        "release_date": "2023-09-28",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.38,
-        "vote_count": 404
-      }
-    },
-    "814800": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/aCaqCvYn48b3lfGKGnUdVAE1yeB.jpg",
-        "id": 814800,
-        "title": "Goodnight Mommy",
-        "original_title": "Goodnight Mommy",
-        "overview": "When twin brothers arrive home to find their mother’s demeanor altered and face covered in surgical bandages, they begin to suspect the woman beneath the gauze might not be their mother.",
-        "poster_path": "/oHhD5jD4S5ElPNNFCDKXJAzMZ5h.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          27,
-          53,
-          9648
-        ],
-        "popularity": 2.0873,
-        "release_date": "2022-09-16",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.272,
-        "vote_count": 555
-      }
-    },
-    "823464": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/gvLG3Fnznkxl4SmYfcK8gUuqxM8.jpg",
-        "id": 823464,
-        "title": "Godzilla x Kong: The New Empire",
-        "original_title": "Godzilla x Kong: The New Empire",
-        "overview": "Following their explosive showdown, Godzilla and Kong must reunite against a colossal undiscovered threat hidden within our world, challenging their very existence – and our own.",
-        "poster_path": "/z1p34vh7dEOnLDmyCrlUVLuoDzd.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          12,
-          878
-        ],
-        "popularity": 14.4644,
-        "release_date": "2024-03-27",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.05,
-        "vote_count": 4705
-      }
-    },
-    "829774": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/upoaYa4aVhGE3ByouVV5WpdBwto.jpg",
-        "id": 829774,
-        "title": "Somewhere in Queens",
-        "original_title": "Somewhere in Queens",
-        "overview": "Leo and Angela Russo live a simple life in Queens, surrounded by their overbearing Italian-American family. When their son finds success on his high school basketball team, Leo tears the family apart trying to make it happen.",
-        "poster_path": "/zXr6AziPii0NFpbTANNpLrOPxRP.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          18
-        ],
-        "popularity": 1.3466,
-        "release_date": "2023-04-21",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.3,
-        "vote_count": 81
-      }
-    },
-    "936960": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/1ZnbzMbxgSqKuCh9aOQCvv1mAyN.jpg",
-        "id": 936960,
-        "title": "Christmas with You",
-        "original_title": "Christmas with You",
-        "overview": "Feeling career burnout, pop star Angelina escapes to grant a young fan's wish in small-town New York, where she not only finds the inspiration to revitalize her career but also a shot at true love.",
-        "poster_path": "/26RZloFHUyc0GTsybmnUPpSCPHb.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10749,
-          35
-        ],
-        "popularity": 0.8557,
-        "release_date": "2022-11-17",
-        "softcore": false,
-        "video": false,
-        "vote_average": 5.8,
-        "vote_count": 240
-      }
-    },
-    "973628": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/m49sdwx5KDHtLTx3KpOnm9gbZKD.jpg",
-        "id": 973628,
-        "title": "A Normal Family",
-        "original_title": "보통의 가족",
-        "overview": "Jae-wan, a successful lawyer, takes on the case of a rich executive's son, who has purposely run over and killed a man and left his daughter seriously injured. It's Jae-wan's job to defend a murderer, just another rung on his career's golden-stepped ladder. His younger brother, on the contrary, is a scrupulous and upstanding paediatrician, who always puts the health of his patients over profit and money, often contravening the rules of the private clinic where he works. The brothers meet once a month with their wives for fine dining in expensive restaurants, but when an unexpected situation involving their teenage kids arises, their consciences are questioned and their usual dinner conversation takes an unexpected turn.",
-        "poster_path": "/6oKxIHM08TRkv7QCpi9cqHU1q9F.jpg",
-        "media_type": "movie",
-        "original_language": "ko",
-        "genre_ids": [
-          18,
-          53
-        ],
-        "popularity": 1.78,
-        "release_date": "2024-10-16",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.934,
-        "vote_count": 144
-      }
-    },
-    "1047020": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/2s4KvAxS9igmXZkhrxqzztAykGB.jpg",
-        "id": 1047020,
-        "title": "The Last Stop in Yuma County",
-        "original_title": "The Last Stop in Yuma County",
-        "overview": "While awaiting the next fuel truck at a middle-of-nowhere Arizona rest stop, a traveling young knife salesman is thrust into a high-stakes hostage situation by the arrival of two similarly stranded bank robbers with no qualms about using cruelty—or cold, hard steel—to protect their bloodstained, ill-gotten fortune.",
-        "poster_path": "/u6ae2MMh8PpSamO3cIttLM5B18v.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          80,
-          18,
-          53
-        ],
-        "popularity": 1.3822,
-        "release_date": "2024-05-10",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.9,
-        "vote_count": 361
-      }
-    },
-    "1083968": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/r4X2xRrWleVgx0kahP27xRmm3ia.jpg",
-        "id": 1083968,
-        "title": "Locked",
-        "original_title": "Locked",
-        "overview": "When Eddie breaks into a luxury SUV, he steps into a deadly trap set by William, a self-proclaimed vigilante delivering his own brand of twisted justice. With no means of escape, Eddie must fight to survive in a ride where escape is an illusion, survival is a nightmare, and justice shifts into high gear.",
-        "poster_path": "/hhkiqXpfpufwxVrdSftzeKIANl3.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          27,
-          53
-        ],
-        "popularity": 3.2619,
-        "release_date": "2025-03-20",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.176,
-        "vote_count": 567
-      }
-    },
-    "1106739": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/9Qq8InnodUYs8zdam8Zj967i6RO.jpg",
-        "id": 1106739,
-        "title": "Juror #2",
-        "original_title": "Juror #2",
-        "overview": "While serving as a juror in a high profile murder trial, family man Justin Kemp finds himself struggling with a serious moral dilemma…one he could use to sway the jury verdict and potentially convict—or free—the accused killer.",
-        "poster_path": "/ugQkpGajKFQ8eyOEhGheR0HfWQ.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          18,
-          53
-        ],
-        "popularity": 4.4793,
-        "release_date": "2024-10-30",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.892,
-        "vote_count": 2498
-      }
-    },
-    "1161617": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/sO4cj2n0OQNOmWO0ykaazWCUDAb.jpg",
-        "id": 1161617,
-        "title": "Code 3",
-        "original_title": "Code 3",
-        "overview": "A burned-out paramedic tries to survive his last 24 hours on the job while training a new recruit.",
-        "poster_path": "/gIAYMDb5mIAeCAj76q1sRsKjkzo.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          35,
-          28,
-          18
-        ],
-        "popularity": 5.4113,
-        "release_date": "2025-09-12",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.071,
-        "vote_count": 287
-      }
-    },
-    "1239193": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/lOje1iz4VYWELYWRkZAwI7oIJd0.jpg",
-        "id": 1239193,
-        "title": "Deep Cover",
-        "original_title": "Deep Cover",
-        "overview": "Kat is an improv comedy teacher beginning to question if she’s missed her shot at success. When an undercover cop offers her the role of a lifetime, she recruits two of her students to infiltrate London’s gangland by impersonating dangerous criminals.",
-        "poster_path": "/yYfaChljpg6eo9ZlFyTmI81PMZC.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          28,
-          35,
-          80
-        ],
-        "popularity": 6.4424,
-        "release_date": "2025-06-12",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.698,
-        "vote_count": 594
-      }
-    },
-    "1241921": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/2ha0wAOqrUcLScStWQcgeOOXapQ.jpg",
-        "id": 1241921,
-        "title": "A Big Bold Beautiful Journey",
-        "original_title": "A Big Bold Beautiful Journey",
-        "overview": "Sarah and David are single strangers who meet at a mutual friend’s wedding and soon, through a surprising twist of fate, find themselves on a funny, fantastical, sweeping adventure together where they get to re-live important moments from their respective pasts, illuminating how they got to where they are in the present... and possibly getting a chance to alter their futures.",
-        "poster_path": "/uMAkmQlKthQpTMiyPAKOYK3JnMs.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10749,
-          14,
-          18
-        ],
-        "popularity": 4.8774,
-        "release_date": "2025-09-17",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.172,
-        "vote_count": 411
-      }
-    },
-    "1321439": {
-      "count": 2,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/i8QHgJKnsd8csNBo8fH9wYW2Y9E.jpg",
-        "id": 1321439,
-        "title": "The Wrong Paris",
-        "original_title": "The Wrong Paris",
-        "overview": "Dawn thinks she's joining a dating show in Paris, France, only to land in Paris, Texas. She has an exit plan — until sparks fly with the cowboy bachelor.",
-        "poster_path": "/A0KRoR842OgNByCfw9iFHbWoeR9.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10749,
-          35
-        ],
-        "popularity": 2.2863,
-        "release_date": "2025-09-11",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.697,
-        "vote_count": 315
-      }
-    },
-    "1323475": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/idRDmfGxrLD0SNBq5I2J6HC0dt5.jpg",
-        "id": 1323475,
-        "title": "Champagne Problems",
-        "original_title": "Champagne Problems",
-        "overview": "A driven American exec heads to Paris determined to acquire a champagne brand by Christmas — and accidentally falls for the heir to the bubbly empire.",
-        "poster_path": "/a66w2eVNFHMgevJlw0d6f4TTrrD.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10749,
-          35
-        ],
-        "popularity": 2.7949,
-        "release_date": "2025-11-18",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.036,
-        "vote_count": 223
-      }
-    },
-    "1368314": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/hl7FEzMqgpsD0RfwMzskzQoiD1M.jpg",
-        "id": 1368314,
-        "title": "Passenger",
-        "original_title": "Passenger",
-        "overview": "After a young couple witnesses a gruesome highway accident, they soon realize they did not leave the crash scene alone, as a demonic presence called the Passenger that won't stop until it claims them both turns their van life adventure into a nightmare.",
-        "poster_path": "/2sOEJzhPzjTkZSlPbGxOJ7xgIyS.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          27,
-          53
-        ],
-        "popularity": 14.3675,
-        "release_date": "2026-05-20",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.216,
-        "vote_count": 74
-      }
-    },
-    "1371185": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/8dlna8rRcf5gDCRzEsjtHizpj1X.jpg",
-        "id": 1371185,
-        "title": "Song Sung Blue",
-        "original_title": "Song Sung Blue",
-        "overview": "Based on a true story, two down-on-their-luck musicians form a joyous Neil Diamond tribute band, proving it's never too late to find love and follow your dreams.",
-        "poster_path": "/xStmzLprgzqjzfvpBI7uTbcRpwQ.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10402,
-          10749,
-          18
-        ],
-        "popularity": 5.5832,
-        "release_date": "2025-12-15",
-        "softcore": false,
-        "video": false,
-        "vote_average": 7.39,
-        "vote_count": 260
-      }
-    },
-    "1618945": {
-      "count": 1,
-      "movie": {
-        "adult": false,
-        "backdrop_path": "/1EVHnzF3gescyQZSqwbx5LfQ1EN.jpg",
-        "id": 1618945,
-        "title": "Yoh! Bestie",
-        "original_title": "Yoh! Bestie",
-        "overview": "Thando is perpetually unlucky in love, but when her bestie returns from his travels with a fiancée in tow, she's forced to face a new emotion — jealousy.",
-        "poster_path": "/9wBzRaeWfELNOPmcvOVTmB3kDEl.jpg",
-        "media_type": "movie",
-        "original_language": "en",
-        "genre_ids": [
-          10749,
-          35
-        ],
-        "popularity": 3.5938,
-        "release_date": "2026-02-06",
-        "softcore": false,
-        "video": false,
-        "vote_average": 6.214,
-        "vote_count": 42
-      }
-    }
+    "103": {"count":1,"movie":{"id":103,"title":"Taxi Driver","release_date":"1976-02-09","vote_average":8.124,"poster_path":"/ekstpH614fwDX8DUln1a2Opz0N8.jpg","genre_ids":[80,18],"overview":"Suffering from insomnia, disturbed loner Travis Bickle takes a job as a New York City cabbie, haunting the streets nightly, growing increasingly detached from reality as he dreams of cleaning up the filthy city."}},
+    "114": {"count":1,"movie":{"id":114,"title":"Pretty Woman","release_date":"1990-03-23","vote_average":7.448,"poster_path":"/hVHUfT801LQATGd26VPzhorIYza.jpg","genre_ids":[10749,35],"overview":"Vivian is a carefree, streetwise diamond in the rough when she meets sophisticated billionaire Edward in a chance encounter that turns into a week-long business arrangement."}},
+    "184": {"count":1,"movie":{"id":184,"title":"Jackie Brown","release_date":"1997-12-25","vote_average":7.359,"poster_path":"/rOUx7qg4KmEh1juEDwqzbDSL1Nr.jpg","genre_ids":[80,18,53],"overview":"Jackie Brown is a flight attendant who gets caught in the middle of smuggling cash into the country for her gunrunner boss."}},
+    "207": {"count":1,"movie":{"id":207,"title":"Dead Poets Society","release_date":"1989-06-02","vote_average":8.3,"poster_path":"/erzbMlcNHOdx24AXOcn2ZKA7R1q.jpg","genre_ids":[18],"overview":"At an elite, old-fashioned boarding school in New England, a passionate English teacher inspires his students to rebel against convention and seize the potential of every day."}},
+    "251": {"count":1,"movie":{"id":251,"title":"Ghost","release_date":"1990-07-13","vote_average":7.24,"poster_path":"/w9RaPHov8oM5cnzeE27isnFMsvS.jpg","genre_ids":[14,10749,53],"overview":"After a young man is murdered, his spirit stays behind to warn his lover of impending danger, with the help of a reluctant psychic."}},
+    "629": {"count":1,"movie":{"id":629,"title":"The Usual Suspects","release_date":"1995-07-19","vote_average":8.168,"poster_path":"/99X2SgyFunJFXGAYnDv3sb9pnUD.jpg","genre_ids":[18,80,53],"overview":"Held in an L.A. interrogation room, Verbal Kint attempts to convince the feds that a mythic crime lord, Keyser Soze, not only exists, but was also responsible for drawing him and his four partners into a multi-million dollar heist."}},
+    "688": {"count":1,"movie":{"id":688,"title":"The Bridges of Madison County","release_date":"1995-06-02","vote_average":7.7,"poster_path":"/aCBrhOQjhG397GLkEZ49zReQEKX.jpg","genre_ids":[18,10749],"overview":"Photographer Robert Kincaid wanders into the life of housewife Francesca Johnson for four days in the 1960s."}},
+    "821": {"count":1,"movie":{"id":821,"title":"Judgment at Nuremberg","release_date":"1961-12-18","vote_average":8.007,"poster_path":"/b6vYatvui1EXeFYfpDX4rcbueuP.jpg","genre_ids":[18,36],"overview":"In 1947, four German judges who served on the bench during the Nazi regime face a military tribunal to answer charges of crimes against humanity."}},
+    "824": {"count":1,"movie":{"id":824,"title":"Moulin Rouge!","release_date":"2001-05-18","vote_average":7.527,"poster_path":"/2kjM5CUZRIU5yOANUowrbJcRL9L.jpg","genre_ids":[18,10749,10402],"overview":"A celebration of love and creative inspiration takes place in the infamous Parisian nightclub, at the cusp of the 20th century."}},
+    "949": {"count":1,"movie":{"id":949,"title":"Heat","release_date":"1995-12-15","vote_average":7.937,"poster_path":"/e09dLw1Ljtccd2P4NsuUvVtS5du.jpg","genre_ids":[80,18,28],"overview":"Obsessive master thief Neil McCauley leads a top-notch crew on various daring heists throughout Los Angeles while determined detective Vincent Hanna pursues him without rest."}},
+    "9944": {"count":2,"movie":{"id":9944,"title":"The Pelican Brief","release_date":"1993-09-17","vote_average":6.593,"poster_path":"/7B1HS0SqfJR1jbeHS6V0ZWdzLXP.jpg","genre_ids":[53,80,18],"overview":"A law student's theory about the recent deaths of two Supreme Court justices embroils her in a far-reaching web of murder, corruption, and greed."}},
+    "11036": {"count":1,"movie":{"id":11036,"title":"The Notebook","release_date":"2004-06-25","vote_average":7.888,"poster_path":"/rNzQyW4f8B8cQeg7Dgj3n6eT5k9.jpg","genre_ids":[10749,18],"overview":"An epic love story centered around an older man who reads aloud to a woman with Alzheimer's."}},
+    "19913": {"count":1,"movie":{"id":19913,"title":"(500) Days of Summer","release_date":"2009-07-17","vote_average":7.302,"poster_path":"/qXAuQ9hF30sQRsXf40OfRVl0MJZ.jpg","genre_ids":[35,18,10749],"overview":"Tom, greeting-card writer and hopeless romantic, is caught completely off-guard when his girlfriend, Summer, suddenly dumps him."}},
+    "32489": {"count":2,"movie":{"id":32489,"title":"Thoroughly Modern Millie","release_date":"1967-03-22","vote_average":6.864,"poster_path":"/ce8rBGFR0naGsp6mKy9CNKn9iSa.jpg","genre_ids":[35,10402,10749],"overview":"Millie Dillmount, a fearless young lady fresh from Salina, Kansas, determined to experience Life, sets out to see the world in the rip-roaring Twenties."}},
+    "37799": {"count":1,"movie":{"id":37799,"title":"The Social Network","release_date":"2010-10-01","vote_average":7.374,"poster_path":"/n0ybibhJtQ5icDqTp8eRytcIHJx.jpg","genre_ids":[18],"overview":"In 2003, Harvard undergrad and computer programmer Mark Zuckerberg begins work on a new concept that eventually turns into the global social network known as Facebook."}},
+    "74308": {"count":1,"movie":{"id":74308,"title":"Detachment","release_date":"2011-04-24","vote_average":7.63,"poster_path":"/bC5H2dabnHrQJD1KmQUSUUeuCXU.jpg","genre_ids":[18],"overview":"A chronicle of three weeks in the lives of several high school teachers, administrators and students through the eyes of substitute teacher, Henry Barthes."}},
+    "138843": {"count":1,"movie":{"id":138843,"title":"The Conjuring","release_date":"2013-07-18","vote_average":7.54,"poster_path":"/wVYREutTvI2tmxr6ujrHT704wGF.jpg","genre_ids":[27,53],"overview":"Paranormal investigators Ed and Lorraine Warren work to help a family terrorized by a dark presence in their farmhouse."}},
+    "152601": {"count":1,"movie":{"id":152601,"title":"Her","release_date":"2013-12-18","vote_average":7.838,"poster_path":"/eCOtqtfvn7mxGl6nfmq4b1exJRc.jpg","genre_ids":[10749,878,18],"overview":"In the not so distant future, Theodore, a lonely writer, purchases a newly developed operating system designed to meet the user's every need."}},
+    "334541": {"count":1,"movie":{"id":334541,"title":"Manchester by the Sea","release_date":"2016-11-17","vote_average":7.554,"poster_path":"/o9VXYOuaJxCEKOxbA86xqtwmqYn.jpg","genre_ids":[18],"overview":"After his older brother passes away, Lee Chandler is forced to return home to care for his 16-year-old nephew."}},
+    "438631": {"count":1,"movie":{"id":438631,"title":"Dune","release_date":"2021-09-15","vote_average":7.78,"poster_path":"/gDzOcq0pfeCeqMBwKIJlSmQpjkZ.jpg","genre_ids":[878,12],"overview":"Paul Atreides, a brilliant and gifted young man born into a great destiny beyond his understanding, must travel to the most dangerous planet in the universe."}},
+    "475557": {"count":1,"movie":{"id":475557,"title":"Joker","release_date":"2019-10-01","vote_average":8.123,"poster_path":"/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg","genre_ids":[80,53,18],"overview":"During the 1980s, a failed stand-up comedian is driven insane and turns to a life of crime and chaos in Gotham City."}},
+    "522212": {"count":1,"movie":{"id":522212,"title":"Just Mercy","release_date":"2019-12-25","vote_average":7.85,"poster_path":"/2bDZl3PzFLFWe4gaFUQnnaslqT3.jpg","genre_ids":[18,80,36],"overview":"The powerful true story of Harvard-educated lawyer Bryan Stevenson, who goes to Alabama to defend the disenfranchised and wrongly condemned."}},
+    "600583": {"count":1,"movie":{"id":600583,"title":"The Power of the Dog","release_date":"2021-10-25","vote_average":6.736,"poster_path":"/kEy48iCzGnp0ao1cZbNeWR6yIhC.jpg","genre_ids":[18,37],"overview":"A domineering but charismatic rancher wages a war of intimidation on his brother's new wife and her teen son, until long-hidden secrets come to light."}}
   },
-  "likedMovieIds": [
-    289,
-    489,
-    389,
-    419430,
-    496243,
-    850165,
-    313369,
-    693134,
-    974635,
-    1538,
-    872,
-    76,
-    80,
-    845,
-    1233413
-  ]
+  "likedMovieIds": [289,489,389,419430,496243,313369,693134,1538,872,76,80,845,1233413]
 };
 /* Example shape once generated:
 const MY_TASTE_DATA = {
@@ -4118,14 +531,18 @@ const MY_TASTE_DATA = {
 /* ==================================================================== */
 
 const SERVICES = [
-  { id: 'netflix',   name: 'Netflix',      color: '#E50914', tmdbId: 8 },
-  { id: 'prime',     name: 'Prime Video',  color: '#00A8E0', tmdbId: 9 },
-  { id: 'disney',    name: 'Disney+',      color: '#113CCF', tmdbId: 337 },
-  { id: 'max',       name: 'Max',          color: '#5822B4', tmdbId: 1899 },
-  { id: 'hulu',      name: 'Hulu',         color: '#1CE783', tmdbId: 15 },
-  { id: 'apple',     name: 'Apple TV+',    color: '#888888', tmdbId: 350 },
-  { id: 'peacock',   name: 'Peacock',      color: '#FA8E00', tmdbId: 386 },
-  { id: 'paramount', name: 'Paramount+',   color: '#0064FF', tmdbId: 531 },
+  { id: 'netflix',   name: 'Netflix',        color: '#E50914', tmdbId: 8 },
+  { id: 'prime',     name: 'Prime Video',    color: '#00A8E0', tmdbId: 9 },
+  { id: 'disney',    name: 'Disney+',        color: '#113CCF', tmdbId: 337 },
+  { id: 'max',       name: 'Max',            color: '#5822B4', tmdbId: 1899 },
+  { id: 'hulu',      name: 'Hulu',           color: '#1CE783', tmdbId: 15 },
+  { id: 'apple',     name: 'Apple TV+',      color: '#888888', tmdbId: 350 },
+  { id: 'peacock',   name: 'Peacock',        color: '#FA8E00', tmdbId: 386 },
+  { id: 'paramount', name: 'Paramount+',     color: '#0064FF', tmdbId: 531 },
+  // Free, ad-supported services (TMDB monetization type "free", not "flatrate")
+  { id: 'tubi',      name: 'Tubi',           color: '#7B68EE', tmdbId: 73,  isFree: true },
+  { id: 'pluto',     name: 'Pluto TV',       color: '#FFD300', tmdbId: 300, isFree: true },
+  { id: 'roku',      name: 'The Roku Channel', color: '#6F2DA8', tmdbId: 207, isFree: true },
 ];
 
 const GENRE_NAMES = {
@@ -4135,12 +552,173 @@ const GENRE_NAMES = {
   878: 'Science Fiction', 53: 'Thriller', 10752: 'War', 37: 'Western'
 };
 
+// Keyword -> genre ID mapping for free-text mood parsing. This map is just a
+// lookup table; ordering is handled separately in parseFreeTextMood below.
+const KEYWORD_TO_GENRE = {
+  funny: 35, comedy: 35, comedies: 35, hilarious: 35, lighthearted: 35,
+  scary: 27, horror: 27, frightening: 27, spooky: 27, creepy: 27, terrifying: 27,
+  action: 28, explosions: 28, fight: 28, fights: 28,
+  romance: 10749, romantic: 10749, love: 10749, 'date night': 10749,
+  drama: 18, dramatic: 18, heartwarming: 18, emotional: 18, tearjerker: 18,
+  thriller: 53, suspense: 53, suspenseful: 53, tense: 53, 'edge of my seat': 53,
+  mystery: 9648, 'mind-bending': 9648, mindbending: 9648, twist: 9648, twisty: 9648, confusing: 9648,
+  documentary: 99, documentaries: 99, true: 99, 'real life': 99,
+  animated: 16, animation: 16, cartoon: 16, pixar: 16, kids: 10751,
+  family: 10751, 'family friendly': 10751, children: 10751, wholesome: 10751,
+  war: 10752, military: 10752,
+  western: 37, cowboy: 37, cowboys: 37,
+  musical: 10402, music: 10402, singing: 10402,
+  fantasy: 14, magic: 14, magical: 14, wizards: 14, dragons: 14,
+  scifi: 878, 'sci-fi': 878, 'science fiction': 878, space: 878, aliens: 878, futuristic: 878, robots: 878,
+  crime: 80, heist: 80, gangster: 80, mob: 80, mafia: 80,
+  history: 36, historical: 36,
+  adventure: 12, adventurous: 12, exploration: 12,
+};
+
+// Keyword -> era range mapping (matches the eraSelect option values).
+const KEYWORD_TO_ERA = {
+  '80s': '1980-01-01,1990-01-01', '1980s': '1980-01-01,1990-01-01', eighties: '1980-01-01,1990-01-01',
+  '90s': '1990-01-01,2000-01-01', '1990s': '1990-01-01,2000-01-01', nineties: '1990-01-01,2000-01-01',
+  '2000s': '2000-01-01,2010-01-01',
+  '2010s': '2010-01-01,2020-01-01',
+  recent: '2023-01-01,2030-01-01', new: '2023-01-01,2030-01-01', newest: '2023-01-01,2030-01-01', latest: '2023-01-01,2030-01-01',
+  classic: '1900-01-01,2000-01-01', old: '1900-01-01,2000-01-01', vintage: '1900-01-01,2000-01-01',
+};
+
+// Phrases that map to the special mood dropdown values rather than a genre.
+const KEYWORD_TO_SPECIAL_MOOD = {
+  acclaimed: 'acclaimed', 'critically acclaimed': 'acclaimed', 'highly rated': 'acclaimed',
+  oscar: 'awards', oscars: 'awards', 'best picture': 'awards', award: 'awards', awards: 'awards',
+};
+
+// Parses free text into { mood, era } by scanning for known keywords/phrases.
+// Multi-word phrases are checked before single words (sorted longest-first)
+// so e.g. "best picture" matches before a shorter overlapping word would.
+// Unlike a single best-match parser, this collects ALL distinct genres found
+// (e.g. "funny scary movie" finds both Comedy and Horror) so they can be
+// blended at fetch time, trying an AND match first and falling back to OR.
+// Special moods (acclaimed/awards) take priority and short-circuit genre
+// blending, since those aren't genres and don't combine with them.
+function parseFreeTextMood(text) {
+  const lower = text.toLowerCase();
+  const result = { mood: null, era: null, matchedTerms: [] };
+
+  const specialPhrases = Object.keys(KEYWORD_TO_SPECIAL_MOOD).sort((a, b) => b.length - a.length);
+  for (const phrase of specialPhrases) {
+    if (lower.includes(phrase)) {
+      result.mood = KEYWORD_TO_SPECIAL_MOOD[phrase];
+      result.matchedTerms.push(phrase);
+      break;
+    }
+  }
+
+  if (!result.mood) {
+    const genreIdsFound = []; // distinct genre IDs, in order of first match
+    const genrePhrases = Object.keys(KEYWORD_TO_GENRE).sort((a, b) => b.length - a.length);
+    // Track which character ranges have already been claimed by a longer
+    // phrase, so e.g. "science fiction" doesn't also separately match
+    // nothing extra, and so we don't double-count overlapping substrings.
+    const claimedRanges = [];
+    const isClaimed = (start, end) => claimedRanges.some(r => start < r.end && end > r.start);
+
+    for (const phrase of genrePhrases) {
+      let searchFrom = 0;
+      let idx;
+      while ((idx = lower.indexOf(phrase, searchFrom)) !== -1) {
+        const end = idx + phrase.length;
+        if (!isClaimed(idx, end)) {
+          const genreId = KEYWORD_TO_GENRE[phrase];
+          if (!genreIdsFound.includes(genreId)) {
+            genreIdsFound.push(genreId);
+            result.matchedTerms.push(phrase);
+          }
+          claimedRanges.push({ start: idx, end });
+        }
+        searchFrom = end;
+      }
+    }
+
+    if (genreIdsFound.length === 1) {
+      result.mood = String(genreIdsFound[0]);
+    } else if (genreIdsFound.length > 1) {
+      // Cap at two genres to blend — TMDB's discover endpoint and our UI
+      // both reason about this as a pairwise AND-then-OR, not N-way.
+      result.mood = 'blend:' + genreIdsFound.slice(0, 2).join(',');
+    }
+  }
+
+  const eraPhrases = Object.keys(KEYWORD_TO_ERA).sort((a, b) => b.length - a.length);
+  for (const phrase of eraPhrases) {
+    if (lower.includes(phrase)) {
+      result.era = KEYWORD_TO_ERA[phrase];
+      result.matchedTerms.push(phrase);
+      break;
+    }
+  }
+
+  return result;
+}
+
+let freeTextMood = null; // { mood, era } from free-text parsing, or null if unused/cleared
+
+function applyFreeTextMood() {
+  const input = document.getElementById('freeTextInput');
+  const hintEl = document.getElementById('freeTextHint');
+  const text = input.value.trim();
+
+  if (!text) {
+    freeTextMood = null;
+    hintEl.textContent = "Type a few words describing what you're in the mood for.";
+    hintEl.className = 'freetext-hint';
+    return;
+  }
+
+  const parsed = parseFreeTextMood(text);
+  freeTextMood = parsed.mood || parsed.era ? parsed : null;
+
+  if (parsed.matchedTerms.length) {
+    hintEl.textContent = `Got it — searching for something like that.`;
+    hintEl.className = 'freetext-hint matched';
+  } else {
+    hintEl.textContent = "Didn't catch anything specific there — try simpler words like \"funny\", \"scary\", \"space\", or \"90s\".";
+    hintEl.className = 'freetext-hint unmatched';
+  }
+
+  getRecommendations();
+}
+
+
+
+// Academy Award Best Picture NOMINEES (winners + losers), 1927/28 through 2025
+// (98th ceremony, held March 2026). This is a one-time static snapshot with
+// real TMDB data baked in (id, poster, rating, genres, overview) — it won't
+// include nominees from future ceremonies, and TMDB ratings/posters will
+// drift slightly stale over time, until manually regenerated.
+//
+// Generate/refresh this with generate-oscar-data.html, then paste the
+// resulting OSCAR_NOMINEE_DATA array below, replacing the placeholder.
+// Pre-baked Oscar Best Picture nominee data, generated 2026-06-30.
+// 612 of 612 titles resolved successfully via TMDB.
+// *** PASTE YOUR OSCAR DATA HERE — replace this entire line with the const OSCAR_NOMINEE_DATA = [...]; output from generate-oscar-data.html ***
+const OSCAR_NOMINEE_DATA = []; // placeholder
+
 let currentMode = 'default'; // 'default' | 'personal'
 let selected = new Set(['netflix', 'prime']);
 let tasteGenreWeights = {}; // genreId -> weight (fallback/tiebreaker)
 let similarityPool = {}; // movieId -> { count, movie } pooled from recommendations
 let likedMovieIds = new Set(); // don't recommend movies the user already rated
 const omdbCache = {}; // "title|year" -> { rt, imdb }
+
+// Pagination state for "Load more" — only re-fetches when the buffer of
+// already-discovered-but-unshown movies runs dry, so repeated clicks don't
+// necessarily cost a new API round trip every time.
+let displayedMovies = []; // currently rendered, enriched movies
+let pendingMovies = []; // discovered but not yet shown (raw, not enriched)
+let unrankedSimilarityRemainder = []; // personal mode: similarity candidates not yet checked for streaming
+let nextPage = 2; // next TMDB page to fetch for default mode
+let shownIds = new Set(); // movie ids already shown, to avoid duplicates
+const PAGE_SIZE = 8;
+
 
 function setMode(mode) {
   currentMode = mode;
@@ -4200,42 +778,103 @@ function toggleService(id) {
   renderServices();
 }
 
-// Genre rows shown in default mode, in addition to the filter-driven "Top picks" row.
-const ROW_GENRES = [
-  { id: 35, label: 'Comedies' },
-  { id: 53, label: 'Thrillers' },
-  { id: 18, label: 'Dramas' },
-  { id: 27, label: 'Horror' },
-  { id: 16, label: 'Animated' },
-  { id: 10751, label: 'Family' },
-];
-
 // --- TMDB discovery (default mode) ---
-function buildDiscoverUrl({ genre, era, minRating, sortBy }) {
+// "Critically acclaimed" isn't a real genre, so it maps to a high vote
+// average/count threshold instead of a with_genres filter. "Award winning"
+// is handled separately via the pre-baked Best Picture nominee dataset.
+// Blended moods (from free-text matching two genres, e.g. "funny scary")
+// are passed as "blend:35,27" — joinType controls whether TMDB ANDs them
+// (comma) or ORs them (pipe); see fetchMoviesFromTMDB for the AND-then-OR logic.
+function applyMoodToParams(mood, url, joinType) {
+  if (mood === 'acclaimed') {
+    return url + '&vote_average.gte=7.5&vote_count.gte=1000&sort_by=vote_average.desc';
+  }
+  if (mood && mood.startsWith('blend:')) {
+    const ids = mood.replace('blend:', '').split(',');
+    const separator = joinType === 'or' ? '|' : ',';
+    return url + `&with_genres=${ids.join(separator)}`;
+  }
+  if (mood !== 'any' && mood !== 'awards') {
+    return url + `&with_genres=${mood}`;
+  }
+  return url;
+}
+
+// Resolves the effective mood/era to search with: free-text parsing takes
+// priority when active, otherwise falls back to the visible dropdowns.
+function getEffectiveMoodEra() {
+  if (freeTextMood) {
+    return {
+      mood: freeTextMood.mood || 'any',
+      era: freeTextMood.era || document.getElementById('eraSelect').value
+    };
+  }
+  return {
+    mood: document.getElementById('moodSelect').value,
+    era: document.getElementById('eraSelect').value
+  };
+}
+
+function buildDiscoverUrl(page, joinType) {
   const selectedServices = SERVICES.filter(s => selected.has(s.id));
   const providerIds = selectedServices.map(s => s.tmdbId).join('|');
+  const { mood, era } = getEffectiveMoodEra();
+  const minRating = document.getElementById('minRating').value;
+  const sortBy = document.getElementById('sortBy').value;
+
+  // Subscription services use TMDB's "flatrate" monetization type; free
+  // ad-supported services (Tubi, Pluto TV, etc.) use "free". Include
+  // whichever types are actually relevant to what's selected.
+  const monetizationTypes = [];
+  if (selectedServices.some(s => !s.isFree)) monetizationTypes.push('flatrate');
+  if (selectedServices.some(s => s.isFree)) monetizationTypes.push('free');
 
   let url = `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}` +
-    `&include_adult=false&include_video=false&language=en-US&page=1` +
+    `&include_adult=false&include_video=false&language=en-US&page=${page}` +
     `&sort_by=${sortBy}&vote_count.gte=200` +
-    `&with_watch_providers=${providerIds}&watch_region=US&with_watch_monetization_types=flatrate`;
+    `&with_watch_providers=${providerIds}&watch_region=US&with_watch_monetization_types=${monetizationTypes.join('|')}`;
 
-  if (genre && genre !== 'any') url += `&with_genres=${genre}`;
-  if (minRating && minRating !== '0') url += `&vote_average.gte=${minRating}`;
-  if (era && era !== 'any') {
+  url = applyMoodToParams(mood, url, joinType);
+  if (minRating !== '0') url += `&vote_average.gte=${minRating}`;
+  if (era !== 'any') {
     const [from, to] = era.split(',');
     url += `&primary_release_date.gte=${from}&primary_release_date.lte=${to}`;
   }
   return url;
 }
 
-async function fetchMoviesFromTMDB(opts) {
-  const url = buildDiscoverUrl(opts);
+async function fetchMoviesFromTMDB(page) {
+  const { mood } = getEffectiveMoodEra();
+
+  // For blended moods, try the narrow AND match first (movies satisfying
+  // both genres at once). If that comes back too thin to be useful, widen
+  // to an OR match instead — same call pattern as a normal single fetch
+  // when there's no blend, so this adds at most one extra call, and only
+  // when the AND result is sparse.
+  if (mood && mood.startsWith('blend:')) {
+    const andUrl = buildDiscoverUrl(page, 'and');
+    const andRes = await fetch(andUrl);
+    if (!andRes.ok) throw new Error(`TMDB request failed (${andRes.status}). Check your API key.`);
+    const andData = await andRes.json();
+    const andResults = andData.results || [];
+
+    if (andResults.length >= 5) return andResults;
+
+    const orUrl = buildDiscoverUrl(page, 'or');
+    const orRes = await fetch(orUrl);
+    if (!orRes.ok) throw new Error(`TMDB request failed (${orRes.status}). Check your API key.`);
+    const orData = await orRes.json();
+    return orData.results || [];
+  }
+
+  const url = buildDiscoverUrl(page);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`TMDB request failed (${res.status}). Check your API key.`);
   const data = await res.json();
   return data.results || [];
 }
+
+
 
 async function getWatchProviders(movieId) {
   const url = `https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${TMDB_API_KEY}`;
@@ -4243,9 +882,18 @@ async function getWatchProviders(movieId) {
   if (!res.ok) return [];
   const data = await res.json();
   const us = data.results?.US;
-  const flatrate = us?.flatrate || [];
+  // Subscription services live under "flatrate"; free ad-supported services
+  // (Tubi, Pluto TV, etc.) live under "free" — check both buckets.
+  const available = [...(us?.flatrate || []), ...(us?.free || [])];
   const selectedIds = SERVICES.filter(s => selected.has(s.id)).map(s => s.tmdbId);
-  return flatrate.filter(p => selectedIds.includes(p.provider_id)).map(p => p.provider_name);
+  const matched = available.filter(p => selectedIds.includes(p.provider_id));
+  // Dedupe in case a provider somehow appears in both buckets.
+  const seen = new Set();
+  return matched.filter(p => {
+    if (seen.has(p.provider_id)) return false;
+    seen.add(p.provider_id);
+    return true;
+  }).map(p => p.provider_name);
 }
 
 async function getOMDbScores(title, year) {
@@ -4270,34 +918,49 @@ async function getOMDbScores(title, year) {
   }
 }
 
+function scoreByTaste(movie) {
+  if (!Object.keys(tasteGenreWeights).length) return 0;
+  return (movie.genre_ids || []).reduce((sum, g) => sum + (tasteGenreWeights[g] || 0), 0);
+}
+
 // Checks a batch of candidate movies against the user's selected streaming
-// services in parallel, returning only the ones available, capped at `limit`.
-async function filterToStreamable(candidates, limit) {
-  const results = [];
-  for (const c of candidates) {
-    if (results.length >= limit) break;
+// services, returning only the ones available. Capped at `limit` checks per
+// call (not per result) to bound API cost — further candidates can be
+// checked later via checkMoreStreamable as the user clicks "Load more".
+async function filterToStreamable(candidates, limit = 40) {
+  const toCheck = candidates.slice(0, limit);
+  const remainder = candidates.slice(limit);
+  const checks = await Promise.all(toCheck.map(async (c) => {
     const providers = await getWatchProviders(c.id);
-    if (providers.length > 0) results.push({ ...c, providers });
-  }
-  return results;
-}
-
-// Enriches a list of movies with watch providers (if not already attached)
-// and OMDb scores, in parallel.
-async function enrichMovies(movies) {
-  return Promise.all(movies.map(async (m) => {
-    const year = m.release_date?.slice(0, 4) || '';
-    const needsProviders = !m.providers;
-    const [providers, scores] = await Promise.all([
-      needsProviders ? getWatchProviders(m.id) : Promise.resolve(m.providers),
-      getOMDbScores(m.title, year)
-    ]);
-    const tasteScore = similarityPool[m.id]?.count || 0;
-    return { ...m, providers, scores, year, _tasteScore: tasteScore };
+    return { ...c, providers };
   }));
+  const streamable = checks.filter(c => c.providers.length > 0);
+  streamable._uncheckedRemainder = remainder; // stash for personal-mode pagination
+  return streamable;
 }
 
-let movieIndex = {}; // id -> enriched movie, for detail panel lookups
+// Filters the pre-baked Oscar nominee dataset by era/rating, client-side —
+// no API calls needed since the TMDB data is already baked in.
+function getAwardWinningCandidates() {
+  const { era } = getEffectiveMoodEra();
+  const minRating = parseFloat(document.getElementById('minRating').value) || 0;
+
+  let eraFrom = null, eraTo = null;
+  if (era !== 'any') {
+    const [from, to] = era.split(',');
+    eraFrom = new Date(from);
+    eraTo = new Date(to);
+  }
+
+  return OSCAR_NOMINEE_DATA.filter(m => {
+    if (minRating && m.vote_average < minRating) return false;
+    if (eraFrom && m.release_date) {
+      const released = new Date(m.release_date);
+      if (released < eraFrom || released > eraTo) return false;
+    }
+    return true;
+  });
+}
 
 async function getRecommendations() {
   if (!checkSetup()) {
@@ -4313,8 +976,13 @@ async function getRecommendations() {
 
   const btn = document.getElementById('generateBtn');
   btn.disabled = true;
-  closeDetail();
-  movieIndex = {};
+
+  // Reset pagination state on a fresh search.
+  displayedMovies = [];
+  pendingMovies = [];
+  unrankedSimilarityRemainder = [];
+  nextPage = 2;
+  shownIds = new Set();
 
   const usePersonal = currentMode === 'personal';
 
@@ -4330,63 +998,71 @@ async function getRecommendations() {
       document.getElementById('resultsArea').innerHTML =
         '<div class="loading-state"><span class="spinner"></span>Checking your similar-movie pool against streaming...</div>';
 
+      // Rank pooled candidates by how many liked films they were recommended
+      // from, exclude movies already in the liked list, then check streaming
+      // availability — widest net first since most won't be streamable.
       const ranked = Object.values(similarityPool)
         .filter(entry => !likedMovieIds.has(entry.movie.id))
         .sort((a, b) => b.count - a.count || b.movie.vote_average - a.movie.vote_average)
         .map(entry => entry.movie);
 
-      const streamable = await filterToStreamable(ranked, 20);
+      const streamable = await filterToStreamable(ranked, 40);
 
       if (!streamable.length) {
         document.getElementById('resultsArea').innerHTML =
-          '<div class="empty-state">None of your similar-movie matches are on your selected services right now. Try adding a service, or switch to Default.</div>';
+          '<div class="empty-state">None of your similar-movie matches are on your selected services right now. Try adding a service or use the mood filters below instead.</div>';
         btn.disabled = false;
         return;
       }
 
-      document.getElementById('resultsArea').innerHTML =
-        '<div class="loading-state"><span class="spinner"></span>Fetching scores...</div>';
-      const enriched = await enrichMovies(streamable);
-
-      renderRows([
-        { title: "Recommended based on Tejas's favorites", movies: enriched }
-      ]);
+      // The checked batch is ready to show; anything beyond the initial cap
+      // gets checked later, only as the user clicks "load more".
+      unrankedSimilarityRemainder = streamable._uncheckedRemainder || [];
+      pendingMovies = streamable;
+      await showNextBatch();
     } else {
-      document.getElementById('resultsArea').innerHTML =
-        '<div class="loading-state"><span class="spinner"></span>Building your rows...</div>';
+      const { mood } = getEffectiveMoodEra();
 
-      const era = document.getElementById('eraSelect').value;
-      const minRating = document.getElementById('minRating').value;
-      const sortBy = document.getElementById('sortBy').value;
-      const mood = document.getElementById('moodSelect').value;
-
-      // Top picks row reflects the mood/era/rating/sort filters directly.
-      const topPicksRaw = await fetchMoviesFromTMDB({ genre: mood, era, minRating, sortBy });
-      const topPicks = await enrichMovies(topPicksRaw.slice(0, 15));
-
-      // Genre rows always apply era/rating/sort as a global narrowing, but
-      // each row is pinned to its own genre regardless of the mood dropdown.
-      const genreRows = await Promise.all(ROW_GENRES.map(async (g) => {
-        try {
-          const raw = await fetchMoviesFromTMDB({ genre: g.id, era, minRating, sortBy });
-          const enriched = await enrichMovies(raw.slice(0, 15));
-          return { title: g.label, movies: enriched };
-        } catch (e) {
-          return { title: g.label, movies: [] };
+      if (mood === 'awards') {
+        const candidates = getAwardWinningCandidates();
+        if (!candidates.length) {
+          document.getElementById('resultsArea').innerHTML =
+            '<div class="empty-state">No Best Picture nominees matched your era/rating filters. Try loosening them.</div>';
+          btn.disabled = false;
+          return;
         }
-      }));
 
-      const rows = [{ title: 'Top picks for you', movies: topPicks }, ...genreRows]
-        .filter(r => r.movies.length > 0);
-
-      if (!rows.length) {
         document.getElementById('resultsArea').innerHTML =
-          '<div class="empty-state">No movies matched those filters. Try loosening the era or rating filter.</div>';
+          '<div class="loading-state"><span class="spinner"></span>Checking streaming availability...</div>';
+
+        const streamable = await filterToStreamable(candidates, candidates.length);
+        if (!streamable.length) {
+          document.getElementById('resultsArea').innerHTML =
+            '<div class="empty-state">None of these Best Picture nominees are on your selected services right now. Try adding a service.</div>';
+          btn.disabled = false;
+          return;
+        }
+
+        // No further pages exist for this finite list — "load more" just
+        // reveals more of what's already been checked.
+        pendingMovies = streamable;
+        await showNextBatch();
         btn.disabled = false;
         return;
       }
 
-      renderRows(rows);
+      document.getElementById('resultsArea').innerHTML =
+        '<div class="loading-state"><span class="spinner"></span>Searching for movies...</div>';
+
+      const movies = await fetchMoviesFromTMDB(1);
+      if (!movies.length) {
+        document.getElementById('resultsArea').innerHTML =
+          '<div class="empty-state">No movies matched those filters. Try loosening the mood, era, or rating filter.</div>';
+        btn.disabled = false;
+        return;
+      }
+      pendingMovies = movies;
+      await showNextBatch();
     }
   } catch (e) {
     document.getElementById('resultsArea').innerHTML =
@@ -4395,91 +1071,124 @@ async function getRecommendations() {
   btn.disabled = false;
 }
 
-function renderRows(rows) {
-  rows.forEach(row => row.movies.forEach(m => { movieIndex[m.id] = m; }));
+// Takes the next PAGE_SIZE unseen movies from pendingMovies, enriches them
+// with scores/providers, and appends to displayedMovies. If pendingMovies
+// runs low and we're in default mode, fetches another TMDB page first.
+async function showNextBatch() {
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
+  if (loadMoreBtn) { loadMoreBtn.disabled = true; loadMoreBtn.textContent = 'Loading...'; }
 
-  const html = rows.map((row, rowIdx) => {
-    if (!row.movies.length) {
-      return `
-        <div class="row-section">
-          <h2 class="row-title">${row.title}</h2>
-          <div class="row-empty">Nothing available here right now.</div>
-        </div>
-      `;
-    }
+  let candidates = pendingMovies.filter(m => !shownIds.has(m.id));
+
+  const isAwardsMode = currentMode === 'default' && getEffectiveMoodEra().mood === 'awards';
+
+  // In default mode (excluding awards, which is a finite hand-picked list,
+  // not a discover query), top up the buffer with another TMDB page if low.
+  if (currentMode === 'default' && !isAwardsMode && candidates.length < PAGE_SIZE) {
+    try {
+      const more = await fetchMoviesFromTMDB(nextPage);
+      nextPage += 1;
+      pendingMovies = pendingMovies.concat(more);
+      candidates = pendingMovies.filter(m => !shownIds.has(m.id));
+    } catch (e) { /* if this fails, just work with what we have */ }
+  }
+
+  // In personal mode, check a further slice of the similarity pool for
+  // streaming availability only once we actually need more to show.
+  if (currentMode === 'personal' && candidates.length < PAGE_SIZE && unrankedSimilarityRemainder.length) {
+    const nextSlice = unrankedSimilarityRemainder.slice(0, 40);
+    unrankedSimilarityRemainder = unrankedSimilarityRemainder.slice(40);
+    const newlyStreamable = await filterToStreamable(nextSlice, 40);
+    pendingMovies = pendingMovies.concat(newlyStreamable);
+    candidates = pendingMovies.filter(m => !shownIds.has(m.id));
+  }
+
+  const batch = candidates.slice(0, PAGE_SIZE);
+  batch.forEach(m => shownIds.add(m.id));
+
+  if (!batch.length) {
+    renderResults(displayedMovies, currentMode === 'personal', false);
+    return;
+  }
+
+  const enriched = await Promise.all(batch.map(async (m) => {
+    const year = m.release_date?.slice(0, 4) || '';
+    const needsProviders = !m.providers;
+    const [providers, scores] = await Promise.all([
+      needsProviders ? getWatchProviders(m.id) : Promise.resolve(m.providers),
+      getOMDbScores(m.title, year)
+    ]);
+    const tasteScore = similarityPool[m.id]?.count || 0;
+    return { ...m, providers, scores, year, _tasteScore: tasteScore };
+  }));
+
+  displayedMovies = displayedMovies.concat(enriched);
+
+  // More available if the pending buffer still has unseen movies, if
+  // there's an unchecked similarity remainder (personal mode), or if
+  // another TMDB page could still be fetched (default mode, excluding the
+  // finite awards list which has no further pages to pull from).
+  const stillPending = pendingMovies.filter(m => !shownIds.has(m.id)).length > 0;
+  const hasUnrankedRemainder = currentMode === 'personal' && unrankedSimilarityRemainder.length > 0;
+  const canFetchMore = currentMode === 'default' && !isAwardsMode;
+  const hasMore = stillPending || hasUnrankedRemainder || canFetchMore;
+
+  renderResults(displayedMovies, currentMode === 'personal', hasMore);
+}
+
+function loadMore() {
+  showNextBatch();
+}
+
+function renderResults(movies, isSimilarityBased, hasMore) {
+  const cardsHtml = movies.map(m => {
+    const genres = (m.genre_ids || []).slice(0, 2).map(g => GENRE_NAMES[g]).filter(Boolean);
+    const poster = m.poster_path
+      ? `https://image.tmdb.org/t/p/w154${m.poster_path}`
+      : '';
+    const rtVal = m.scores.rt;
+    const rtFresh = rtVal ? parseInt(rtVal) >= 60 : null;
+    const tasteBoosted = m._tasteScore > 0;
+
     return `
-      <div class="row-section">
-        <h2 class="row-title">${row.title}</h2>
-        <div class="row-scroll">
-          ${row.movies.map(m => posterCardHtml(m)).join('')}
+      <div class="movie-card">
+        ${poster ? `<img class="poster" src="${poster}" alt="${m.title} poster" loading="lazy">` : ''}
+        <div class="movie-body">
+          <div class="movie-header">
+            <div>
+              <div class="movie-title">${m.title}</div>
+              <div class="movie-meta">${m.year} · TMDB ${m.vote_average?.toFixed(1)}/10</div>
+            </div>
+            <div class="scores">
+              ${rtVal ? `<span class="score ${rtFresh ? 'score-rt-fresh' : 'score-rt-rotten'}">🍅 ${rtVal}</span>` : ''}
+              ${m.scores.imdb ? `<span class="score score-imdb">★ ${m.scores.imdb}</span>` : ''}
+            </div>
+          </div>
+          <div class="movie-desc">${m.overview ? m.overview.slice(0, 180) + (m.overview.length > 180 ? '…' : '') : ''}</div>
+          <div class="badges">
+            ${m.providers.map(p => `<span class="badge badge-service">${p}</span>`).join('')}
+            ${genres.map(g => `<span class="badge badge-genre">${g}</span>`).join('')}
+            ${tasteBoosted ? `<span class="badge badge-boost">Similar to ${m._tasteScore} of your favorites</span>` : ''}
+          </div>
         </div>
       </div>
     `;
   }).join('');
 
-  document.getElementById('resultsArea').innerHTML = html;
-}
+  const loadMoreHtml = hasMore
+    ? `<button class="load-more-btn" id="loadMoreBtn" onclick="loadMore()">Load more</button>`
+    : (movies.length ? `<div class="no-more-msg">That's everything matching your filters.</div>` : '');
 
-function posterCardHtml(m) {
-  const poster = m.poster_path ? `https://image.tmdb.org/t/p/w185${m.poster_path}` : '';
-  const rtVal = m.scores?.rt;
-  return `
-    <div class="poster-card" onclick="showDetail(${m.id})">
-      ${poster
-        ? `<img class="poster-img" src="${poster}" alt="${m.title} poster" loading="lazy">`
-        : `<div class="poster-fallback">${m.title}</div>`}
-      <div class="card-title">${m.title}</div>
-      <div class="card-meta">
-        <span>${m.year}</span>
-        ${rtVal ? `<span class="card-rt">🍅 ${rtVal}</span>` : ''}
-      </div>
-    </div>
-  `;
-}
-
-function showDetail(movieId) {
-  const m = movieIndex[movieId];
-  if (!m) return;
-  const genres = (m.genre_ids || []).slice(0, 3).map(g => GENRE_NAMES[g]).filter(Boolean);
-  const poster = m.poster_path ? `https://image.tmdb.org/t/p/w342${m.poster_path}` : '';
-  const rtVal = m.scores?.rt;
-  const rtFresh = rtVal ? parseInt(rtVal) >= 60 : null;
-  const tasteBoosted = m._tasteScore > 0;
-
-  const panel = document.getElementById('detailPanel');
-  panel.innerHTML = `
-    ${poster ? `<img class="poster" src="${poster}" alt="${m.title} poster">` : ''}
-    <div class="detail-body">
-      <div class="detail-header">
-        <div>
-          <div class="detail-title">${m.title}</div>
-          <div class="detail-meta">${m.year} · TMDB ${m.vote_average?.toFixed(1)}/10</div>
-        </div>
-        <button class="detail-close" onclick="closeDetail()">Close</button>
-      </div>
-      <div class="badges">
-        ${m.providers.map(p => `<span class="badge badge-service">${p}</span>`).join('')}
-        ${genres.map(g => `<span class="badge badge-genre">${g}</span>`).join('')}
-        ${rtVal ? `<span class="score ${rtFresh ? 'score-rt-fresh' : 'score-rt-rotten'}">🍅 ${rtVal}</span>` : ''}
-        ${m.scores?.imdb ? `<span class="score score-imdb">★ ${m.scores.imdb}</span>` : ''}
-        ${tasteBoosted ? `<span class="badge badge-boost">Similar to ${m._tasteScore} of your favorites</span>` : ''}
-      </div>
-      <div class="detail-desc">${m.overview || ''}</div>
-    </div>
-  `;
-  panel.classList.add('show');
-  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function closeDetail() {
-  const panel = document.getElementById('detailPanel');
-  panel.classList.remove('show');
-  panel.innerHTML = '';
+  document.getElementById('resultsArea').innerHTML =
+    `<div class="results">${cardsHtml}</div>${loadMoreHtml}`;
 }
 
 checkSetup();
 renderServices();
 setMode('default');
+document.getElementById('freeTextInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') applyFreeTextMood();
+});
 </script>
 </body>
 </html>
